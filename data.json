@@ -3,14 +3,18 @@
   "currentDate": "2026-09-15",
   "daysSince": 25,
   "medianPause": 27,
-  "versions": {},
+  "versions": {
+    "Public": "6957",
+    "Staging": "3332",
+    "Experimental": "7448"
+  },
   "signals": [
     {
       "key": "staging",
       "label": "Staging",
-      "value": "—",
-      "note": "История только собирается — нужно пару дней наблюдений",
-      "status": "calm"
+      "value": "v3332",
+      "note": "Менялся меньше часа назад — так бывает перед патчами",
+      "status": "wait"
     },
     {
       "key": "pause",
@@ -22,12 +26,12 @@
     {
       "key": "experimental",
       "label": "Experimental",
-      "value": "—",
-      "note": "Фоновая ветка — со сроками патча не связана",
+      "value": "v7448",
+      "note": "2 смен за 7 дн. — обычный фон",
       "status": "calm"
     }
   ],
-  "waitingSignals": 0,
-  "historySize": 4,
-  "updatedAt": "2026-10-10T21:08:11.952Z"
+  "waitingSignals": 1,
+  "historySize": 7,
+  "updatedAt": "2026-10-10T21:23:16.133Z"
 }
