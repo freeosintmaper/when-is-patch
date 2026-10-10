@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Когда патч? — Dota 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg-dark: #0a0a12;
+    --bg-card: rgba(22, 22, 35, 0.75);
+    --red: #e74c3c;
+    --red-glow: #ff4d3d;
+    --gold: #f0b232;
+    --gold-light: #ffd966;
+    --text: #e8e8f0;
+    --text-dim: #8a8a9e;
+    --border: rgba(240, 178, 50, 0.15);
+  }
+  html, body {
+    min-height: 100vh;
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg-dark);
+    color: var(--text);
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(231, 76, 60, 0.18), transparent 45%),
+      radial-gradient(circle at 85% 80%, rgba(240, 178, 50, 0.12), transparent 50%),
+      radial-gradient(circle at 50% 50%, rgba(70, 30, 90, 0.15), transparent 60%);
+    z-index: -2;
+    animation: bgPulse 15s ease-in-out infinite alternate;
+  }
+  @keyframes bgPulse {
+    0%   { opacity: 0.7; transform: scale(1); }
+    100% { opacity: 1; transform: scale(1.05); }
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(240, 178, 50, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(240, 178, 50, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+    z-index: -1;
+    mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);
+  }
+  .container {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 4rem;
+    position: relative;
+    z-index: 1;
+  }
+  .header { text-align: center; margin-bottom: 3rem; animation: fadeDown 0.8s ease-out; }
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .logo-icon {
+    width: 56px; height: 56px; margin: 0 auto 1rem; display: block;
+    filter: drop-shadow(0 0 20px rgba(231, 76, 60, 0.6));
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-6px); }
+  }
+  h1 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(2.2rem, 6vw, 3.2rem);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #fff 0%, var(--gold) 50%, var(--red) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .subtitle { color: var(--text-dim); font-size: 1rem; font-weight: 400; }
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 1.75rem;
+    margin-bottom: 1.25rem;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.8s ease-out backwards;
+    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .card:nth-child(2) { animation-delay: 0.1s; }
+  .card:nth-child(3) { animation-delay: 0.2s; }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(240, 178, 50, 0.35);
+    box-shadow: 0 15px 40px rgba(0,0,0,0.4), 0 0 30px rgba(240, 178, 50, 0.08);
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity: 0.6;
+  }
+  .card-label {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .card-label .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--red);
+    box-shadow: 0 0 10px var(--red-glow);
+    animation: blink 2s ease-in-out infinite;
+  }
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.3; }
+  }
+  .card-label.gold .dot { background: var(--gold); box-shadow: 0 0 10px var(--gold); }
+  .patch-version {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(2.5rem, 8vw, 3.5rem);
+    font-weight: 700;
+    color: #fff;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    display: inline-block;
+    text-shadow: 0 0 30px rgba(231, 76, 60, 0.5);
+  }
+  .patch-version::before {
+    content: 'v';
+    font-size: 0.5em;
+    color: var(--red);
+    margin-right: 0.1em;
+    vertical-align: top;
+    opacity: 0.8;
+  }
+  .patch-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .meta-item { flex: 1; min-width: 140px; }
+  .meta-item .key {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.35rem;
+  }
+  .meta-item .value {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+  .progress-wrap { margin-top: 1.5rem; }
+  .progress-bar {
+    height: 10px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--red), var(--gold));
+    border-radius: 999px;
+    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    box-shadow: 0 0 15px rgba(240, 178, 50, 0.5);
+  }
+  .progress-fill::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    animation: shimmer 2s infinite;
+  }
+  @keyframes shimmer {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-top: 0.5rem;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+  }
+  .prediction { text-align: center; padding: 0.5rem 0 0.25rem; }
+  .prediction-date {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(2rem, 7vw, 2.75rem);
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.1;
+    filter: drop-shadow(0 0 20px rgba(240, 178, 50, 0.4));
+  }
+  .prediction-sub { margin-top: 0.5rem; color: var(--text-dim); font-size: 0.9rem; }
+  .disclaimer {
+    margin-top: 1.25rem;
+    padding: 0.75rem 1rem;
+    background: rgba(231, 76, 60, 0.08);
+    border-left: 3px solid var(--red);
+    border-radius: 6px;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+    text-align: left;
+  }
+  .footer {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    animation: fadeUp 0.8s ease-out 0.4s backwards;
+  }
+  .footer a { color: var(--gold); text-decoration: none; transition: opacity 0.2s; }
+  .footer a:hover { opacity: 0.7; }
+  @media (max-width: 480px) {
+    .container { padding: 2rem 1rem 3rem; }
+    .card { padding: 1.25rem; border-radius: 16px; }
+    .patch-meta { gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <svg class="logo-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L4 6V12C4 17 7.5 21.5 12 22C16.5 21.5 20 17 20 12V6L12 2Z"
+              stroke="url(#g)" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M12 7V12L15 14" stroke="url(#g)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs>
+          <linearGradient id="g" x1="0" y1="0" x2="24" y2="24">
+            <stop stop-color="#ff4d3d"/>
+            <stop offset="1" stop-color="#f0b232"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <h1>Когда патч?</h1>
+      <p class="subtitle">Следи за обновлениями Dota 2</p>
+    </header>
+
+    <section class="card">
+      <div class="card-label">
+        <span class="dot"></span>
+        Текущий патч
+      </div>
+      <div class="patch-version" id="version">7.XX</div>
+      <div class="patch-meta">
+        <div class="meta-item">
+          <div class="key">Дата выхода</div>
+          <div class="value" id="date">—</div>
+        </div>
+        <div class="meta-item">
+          <div class="key">Прошло дней</div>
+          <div class="value" id="days">—</div>
+        </div>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress"></div>
+        </div>
+        <div class="progress-info">
+          <span id="progress-left">0 дней</span>
+          <span id="progress-right">~150 дней</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-label gold">
+        <span class="dot"></span>
+        Прогноз следующего патча
+      </div>
+      <div class="prediction">
+        <div class="prediction-date" id="next">—</div>
+        <div class="prediction-sub" id="next-sub">Рассчитываем...</div>
+      </div>
+      <div class="disclaimer">
+        Это статистический прогноз на основе среднего интервала между прошлыми патчами.
+        Valve не объявляет даты заранее, поэтому дата может сдвинуться.
+      </div>
+    </section>
+
+    <footer class="footer">
+      Сделано для сообщества Dota 2 · <a href="https://www.dota2.com/patches" target="_blank" rel="noopener">Официальные патчи</a>
+    </footer>
+  </div>
+
+<script>
+fetch('data.json?v=' + Date.now())
+  .then(r => r.json())
+  .then(data => {
+    const avg = data.averageIntervalDays || 150;
+    document.getElementById('version').textContent = data.currentVersion || '—';
+    document.getElementById('days').textContent = data.daysSince ?? '—';
+
+    const dateObj = new Date(data.currentDate);
+    const dateStr = dateObj.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+    document.getElementById('date').textContent = dateStr;
+
+    const nextObj = new Date(data.estimatedNextDate);
+    const nextStr = nextObj.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+    document.getElementById('next').textContent = nextStr;
+
+    const daysLeft = Math.max(0, Math.round((nextObj - new Date()) / 86400000));
+    document.getElementById('next-sub').textContent = daysLeft > 0
+      ? `Примерно через ${daysLeft} ${plural(daysLeft, 'день', 'дня', 'дней')}`
+      : 'Ожидается со дня на день';
+
+    const pct = Math.min(100, (data.daysSince / avg) * 100);
+    setTimeout(() => {
+      document.getElementById('progress').style.width = pct + '%';
+    }, 300);
+    document.getElementById('progress-left').textContent = data.daysSince + ' дней';
+    document.getElementById('progress-right').textContent = '~' + avg + ' дней';
+  })
+  .catch(err => {
+    console.error(err);
+    document.getElementById('version').textContent = 'Ошибка';
+    document.getElementById('next-sub').textContent = 'Не удалось загрузить данные';
+  });
+
+function plural(n, one, few, many) {
+  const m10 = n % 10, m100 = n % 100;
+  if (m10 === 1 && m100 !== 11) return one;
+  if (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return few;
+  return many;
+}
+</script>
+</body>
+</html>
