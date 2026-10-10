@@ -2,7 +2,36 @@
   "currentVersion": "7.41f",
   "currentDate": "2026-09-15",
   "daysSince": 25,
-  "estimatedNextDate": "2027-01-27",
-  "averageIntervalDays": 134,
-  "updatedAt": "2026-10-10T20:15:17.865Z"
+  "medianPause": 27,
+  "versions": {
+    "Public": 37,
+    "Staging": 37,
+    "Experimental": 37
+  },
+  "signals": [
+    {
+      "key": "staging",
+      "label": "Staging",
+      "value": "v37",
+      "note": "Менялся меньше часа назад — как перед патчами",
+      "status": "wait"
+    },
+    {
+      "key": "pause",
+      "label": "Пауза после патча",
+      "value": "25 дн.",
+      "note": "Обычно 27 дн. — в норме",
+      "status": "calm"
+    },
+    {
+      "key": "experimental",
+      "label": "Experimental",
+      "value": "v37",
+      "note": "1 смен за 7 дн. — обычный фон, со сроками не связан",
+      "status": "calm"
+    }
+  ],
+  "waitingSignals": 1,
+  "historySize": 3,
+  "updatedAt": "2026-10-10T20:26:23.049Z"
 }
