@@ -2,8 +2,22 @@ const https = require('https');
 const fs = require('fs');
 
 const PATCHES_URL = 'https://www.dota2.com/datafeed/patchnoteslist?language=english';
-// Публичная веб-версия канала — доступна без авторизации
-const TELEGRAM_URL = 'https://t.me/s/DOTA_DM_SPAM';
+
+// Прямые ссылки на JSON-файлы с версиями веток
+const BRANCHES = [
+  {
+    name: 'Public',
+    url: 'https://raw.githubusercontent.com/muk-as/DOTA2_WEB/master/steam_api/versions/570%20-%20Dota%202.json'
+  },
+  {
+    name: 'Staging',
+    url: 'https://raw.githubusercontent.com/muk-as/DOTA2_WEB/master/steam_api/versions/2305270%20-%20Dota%202%20Staging.json'
+  },
+  {
+    name: 'Experimental',
+    url: 'https://raw.githubusercontent.com/muk-as/DOTA2_WEB/master/steam_api/versions/247040%20-%20Dota%202%20Experimental.json'
+  }
+];
 
 function get(url) {
   return new Promise((resolve, reject) => {
@@ -24,28 +38,17 @@ function median(arr) {
   return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
 }
 
-/**
- * Вытаскивает из HTML-страницы Telegram последние сообщения
- * и находит в них строки вида "[v] 2305270 - Dota 2 Staging 3330 => 3332"
- */
-function parseTelegramVersions(html) {
-  const result = {};
-  // Ищем блоки сообщений
-  const msgRegex = /<div class="tgme_widget_message_text[^"]*"[^>]*>([\s\S]*?)<\/div>/g;
-  let m;
-  while ((m = msgRegex.exec(html)) !== null) {
-    const text = m[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
-    // Public (570)
-    let pub = text.match(/\[v\]\s*570\s*-\s*Dota 2\s+(\d+)\s*=>\s*(\d+)/i);
-    if (pub) result.Public = pub[2];
-    // Staging (2305270)
-    let st = text.match(/\[v\]\s*2305270\s*-\s*Dota 2 Staging\s+(\d+)\s*=>\s*(\d+)/i);
-    if (st) result.Staging = st[2];
-    // Experimental (247040)
-    let ex = text.match(/\[v\]\s*247040\s*-\s*Dota 2 Experimental\s+(\d+)\s*=>\s*(\d+)/i);
-    if (ex) result.Experimental = ex[2];
+// Получаем версию из JSON-файла muk-as
+async function getBranchVersion(url) {
+  try {
+    const raw = await get(url);
+    const json = JSON.parse(raw);
+    const v = json?.result?.active_version;
+    return v ? String(v) : null;
+  } catch (e) {
+    console.error(`⚠️  ${url}: ${e.message}`);
+    return null;
   }
-  return result;
 }
 
 (async () => {
@@ -56,28 +59,24 @@ function parseTelegramVersions(html) {
     const now = new Date().toISOString();
     const versions = {};
 
-    // 1. Версии из Telegram
-    const tgHtml = await get(TELEGRAM_URL);
-    const tgVersions = parseTelegramVersions(tgHtml);
-    console.log('📡 Telegram:', tgVersions);
-
-    for (const branch of ['Public', 'Staging', 'Experimental']) {
-      const v = tgVersions[branch];
+    // 1. Версии из muk-as/DOTA2_WEB
+    for (const b of BRANCHES) {
+      const v = await getBranchVersion(b.url);
       if (v) {
-        versions[branch] = v;
-        const last = [...history].reverse().find(h => h.branch === branch);
+        versions[b.name] = v;
+        const last = [...history].reverse().find(h => h.branch === b.name);
         if (!last || last.version !== v) {
-          history.push({ branch, version: v, timestamp: now });
-          console.log(`📝 ${branch}: ${last ? last.version + ' → ' : ''}${v}`);
+          history.push({ branch: b.name, version: v, timestamp: now });
+          console.log(`📝 ${b.name}: ${last ? last.version + ' → ' : ''}${v}`);
         } else {
-          console.log(`   ${branch}: ${v} (без изменений)`);
+          console.log(`   ${b.name}: ${v} (без изменений)`);
         }
       } else {
-        console.log(`⚠️  ${branch}: не найдено в последних сообщениях`);
+        console.log(`❌ ${b.name}: не получено`);
       }
     }
 
-    // 2. Патчи (официальный список)
+    // 2. Патчи
     const patchData = JSON.parse(await get(PATCHES_URL));
     const patches = patchData.patches || [];
     const sorted = [...patches].sort((a, b) => a.patch_timestamp - b.patch_timestamp);
