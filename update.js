@@ -1,11 +1,9 @@
 const https = require('https');
 const fs = require('fs');
-const { execSync } = require('child_process');
-const os = require('os');
-const path = require('path');
 
 const PATCHES_URL = 'https://www.dota2.com/datafeed/patchnoteslist?language=english';
 
+// Используем специализированный API для получения buildid
 const BRANCHES = [
   { name: 'Public',       appid: 570 },
   { name: 'Staging',      appid: 2305270 },
@@ -19,7 +17,7 @@ function get(url) {
       res.on('data', c => data += c);
       res.on('end', () => {
         try { resolve(JSON.parse(data)); }
-        catch (e) { reject(new Error('Bad JSON')); }
+        catch (e) { reject(new Error('Bad JSON from ' + url)); }
       });
     }).on('error', reject);
   });
@@ -36,20 +34,29 @@ function hoursAgo(iso) {
   return (Date.now() - new Date(iso).getTime()) / 3600000;
 }
 
-function getBuildId(appid) {
-  const home = os.homedir();
-  const script = path.join(home, 'steamcmd', 'steamcmd.sh');
+async function getBuildId(appid) {
   try {
-    const out = execSync(
-      `${script} +@sSteamCmdForcePlatformType windows +login anonymous +app_info_print ${appid} +quit`,
-      { encoding: 'utf8', timeout: 120000, stdio: ['ignore', 'pipe', 'ignore'] }
-    );
-    // Ищем buildid во всех блоках, берём последний (самый вложенный)
-    const matches = [...out.matchAll(/"buildid"\s+"(\d+)"/g)];
-    if (!matches.length) return null;
-    return matches[matches.length - 1][1];
+    const data = await get(`https://api.steamcmd.net/v1/info/${appid}`);
+    const appData = data && data.data && data.data[appid];
+    if (!appData || !appData.branches) return null;
+    
+    // Ищем buildid в ветках public, staging, experimental или первой доступной
+    const branches = appData.branches;
+    const branchKeys = ['public', 'staging', 'experimental'];
+    for (const key of branchKeys) {
+      if (branches[key] && branches[key].buildid) {
+        return branches[key].buildid;
+      }
+    }
+    // Фолбэк: берём первый попавшийся buildid
+    for (const key of Object.keys(branches)) {
+      if (branches[key] && branches[key].buildid) {
+        return branches[key].buildid;
+      }
+    }
+    return null;
   } catch (e) {
-    console.error(`⚠️  appid ${appid}: ${e.message.split('\n')[0]}`);
+    console.error(`⚠️  appid ${appid}: ${e.message}`);
     return null;
   }
 }
@@ -63,9 +70,9 @@ function getBuildId(appid) {
     const now = new Date().toISOString();
     const versions = {};
 
-    // 2. Версии веток через SteamCMD
+    // 2. Версии веток через steamcmd.net
     for (const b of BRANCHES) {
-      const v = getBuildId(b.appid);
+      const v = await getBuildId(b.appid);
       if (v) {
         versions[b.name] = v;
         const last = [...history].reverse().find(h => h.branch === b.name);
