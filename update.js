@@ -1,7 +1,9 @@
 const https = require('https');
 const fs = require('fs');
+const { execSync } = require('child_process');
+const os = require('os');
+const path = require('path');
 
-const STEAM_API = 'https://api.steampowered.com/ISteamApps/UpToDateCheck/v1/';
 const PATCHES_URL = 'https://www.dota2.com/datafeed/patchnoteslist?language=english';
 
 const BRANCHES = [
@@ -17,7 +19,7 @@ function get(url) {
       res.on('data', c => data += c);
       res.on('end', () => {
         try { resolve(JSON.parse(data)); }
-        catch (e) { reject(new Error('Bad JSON from ' + url)); }
+        catch (e) { reject(new Error('Bad JSON')); }
       });
     }).on('error', reject);
   });
@@ -34,6 +36,24 @@ function hoursAgo(iso) {
   return (Date.now() - new Date(iso).getTime()) / 3600000;
 }
 
+function getBuildId(appid) {
+  const home = os.homedir();
+  const script = path.join(home, 'steamcmd', 'steamcmd.sh');
+  try {
+    const out = execSync(
+      `${script} +@sSteamCmdForcePlatformType windows +login anonymous +app_info_print ${appid} +quit`,
+      { encoding: 'utf8', timeout: 120000, stdio: ['ignore', 'pipe', 'ignore'] }
+    );
+    // Ищем buildid во всех блоках, берём последний (самый вложенный)
+    const matches = [...out.matchAll(/"buildid"\s+"(\d+)"/g)];
+    if (!matches.length) return null;
+    return matches[matches.length - 1][1];
+  } catch (e) {
+    console.error(`⚠️  appid ${appid}: ${e.message.split('\n')[0]}`);
+    return null;
+  }
+}
+
 (async () => {
   try {
     // 1. История
@@ -42,25 +62,21 @@ function hoursAgo(iso) {
 
     const now = new Date().toISOString();
     const versions = {};
-    const changes = { Public: [], Staging: [], Experimental: [] };
 
-    // 2. Текущие версии веток
+    // 2. Версии веток через SteamCMD
     for (const b of BRANCHES) {
-      try {
-        const data = await get(`${STEAM_API}?appid=${b.appid}&version=0`);
-        const v = data && data.response && data.response.required_version;
-        if (v) {
-          versions[b.name] = v;
-          const last = [...history].reverse().find(h => h.branch === b.name);
-          if (!last || last.version !== v) {
-            history.push({ branch: b.name, version: v, timestamp: now });
-            console.log(`📝 ${b.name}: ${last ? last.version + ' → ' : ''}${v}`);
-          } else {
-            console.log(`  ${b.name}: ${v} (без изменений)`);
-          }
+      const v = getBuildId(b.appid);
+      if (v) {
+        versions[b.name] = v;
+        const last = [...history].reverse().find(h => h.branch === b.name);
+        if (!last || last.version !== v) {
+          history.push({ branch: b.name, version: v, timestamp: now });
+          console.log(`📝 ${b.name}: ${last ? last.version + ' → ' : ''}${v}`);
+        } else {
+          console.log(`   ${b.name}: ${v} (без изменений)`);
         }
-      } catch (e) {
-        console.error(`⚠️  ${b.name}: ${e.message}`);
+      } else {
+        console.log(`❌ ${b.name}: не получено`);
       }
     }
 
@@ -72,7 +88,6 @@ function hoursAgo(iso) {
     const latestDate = new Date(latest.patch_timestamp * 1000);
     const daysSince = Math.floor((Date.now() - latestDate.getTime()) / 86400000);
 
-    // Медиана пауз с 7.33
     const sinceIdx = sorted.findIndex(p => p.patch_number === '7.33');
     const win = sinceIdx >= 0 ? sorted.slice(sinceIdx) : sorted;
     const intervals = [];
@@ -82,16 +97,10 @@ function hoursAgo(iso) {
     }
     const medianPause = intervals.length ? Math.round(median(intervals)) : 27;
 
-    // 4. Собираем историю смен веток
-    for (const b of BRANCHES) {
-      changes[b.name] = history.filter(h => h.branch === b.name);
-    }
-
-    // 5. Сигналы
+    // 4. Сигналы
     const signals = [];
 
-    // Staging
-    const st = changes.Staging;
+    const st = history.filter(h => h.branch === 'Staging');
     if (st.length) {
       const lastChange = st[st.length - 1].timestamp;
       const hAgo = hoursAgo(lastChange);
@@ -99,14 +108,16 @@ function hoursAgo(iso) {
       const c7  = st.filter(h => hoursAgo(h.timestamp) <= 168).length;
 
       let status = 'calm';
-      let note = `Последняя смена — ${hAgo < 1 ? '<1' : Math.round(hAgo)} ч. назад`;
+      let note;
 
-      if (hAgo <= 24 && c24 >= 3) {
+      if (st.length < 2) {
+        note = 'История только собирается — нужно пару дней наблюдений';
+      } else if (hAgo <= 24 && c24 >= 3) {
         status = 'wait';
         note = `${c24} смены за сутки — сильный сигнал`;
       } else if (hAgo <= 24) {
         status = 'wait';
-        note = `Менялся ${hAgo < 1 ? 'меньше часа' : Math.round(hAgo) + ' ч.'} назад — как перед патчами`;
+        note = `Менялся ${hAgo < 1 ? 'меньше часа' : Math.round(hAgo) + ' ч.'} назад — так бывает перед патчами`;
       } else if (c7 >= 4) {
         status = 'wait';
         note = `${c7} смен за неделю — оживление`;
@@ -123,9 +134,16 @@ function hoursAgo(iso) {
         note,
         status
       });
+    } else {
+      signals.push({
+        key: 'staging',
+        label: 'Staging',
+        value: versions.Staging ? 'v' + versions.Staging : '—',
+        note: 'Данные собираются — проверь позже',
+        status: 'calm'
+      });
     }
 
-    // Пауза
     const pauseWait = daysSince > medianPause;
     signals.push({
       key: 'pause',
@@ -137,14 +155,15 @@ function hoursAgo(iso) {
       status: pauseWait ? 'wait' : 'calm'
     });
 
-    // Experimental — справочный, не сигнал
-    const ex = changes.Experimental;
+    const ex = history.filter(h => h.branch === 'Experimental');
     const ex7 = ex.filter(h => hoursAgo(h.timestamp) <= 168).length;
     signals.push({
       key: 'experimental',
       label: 'Experimental',
       value: versions.Experimental ? 'v' + versions.Experimental : '—',
-      note: `${ex7} смен за 7 дн. — обычный фон, со сроками не связан`,
+      note: ex.length < 2
+        ? 'Фоновая ветка — со сроками патча не связана'
+        : `${ex7} смен за 7 дн. — обычный фон, со сроками не связан`,
       status: 'calm'
     });
 
@@ -155,18 +174,14 @@ function hoursAgo(iso) {
       currentDate: latestDate.toISOString().split('T')[0],
       daysSince,
       medianPause,
-      versions: {
-        Public: versions.Public,
-        Staging: versions.Staging,
-        Experimental: versions.Experimental
-      },
+      versions,
       signals,
       waitingSignals: waitCount,
       historySize: history.length,
       updatedAt: now
     };
 
-    if (history.length > 2000) history = history.slice(-2000);
+    if (history.length > 5000) history = history.slice(-5000);
 
     fs.writeFileSync('history.json', JSON.stringify(history, null, 2));
     fs.writeFileSync('data.json', JSON.stringify(output, null, 2));
