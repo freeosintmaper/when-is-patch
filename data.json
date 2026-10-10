@@ -4,17 +4,15 @@
   "daysSince": 25,
   "medianPause": 27,
   "versions": {
-    "Public": 37,
-    "Staging": 37,
-    "Experimental": 37
+    "Public": "25845666"
   },
   "signals": [
     {
       "key": "staging",
       "label": "Staging",
-      "value": "v37",
-      "note": "Менялся меньше часа назад — как перед патчами",
-      "status": "wait"
+      "value": "—",
+      "note": "История только собирается — нужно пару дней наблюдений",
+      "status": "calm"
     },
     {
       "key": "pause",
@@ -26,12 +24,12 @@
     {
       "key": "experimental",
       "label": "Experimental",
-      "value": "v37",
-      "note": "1 смен за 7 дн. — обычный фон, со сроками не связан",
+      "value": "—",
+      "note": "Фоновая ветка — со сроками патча не связана",
       "status": "calm"
     }
   ],
-  "waitingSignals": 1,
-  "historySize": 3,
-  "updatedAt": "2026-10-10T20:26:23.049Z"
+  "waitingSignals": 0,
+  "historySize": 4,
+  "updatedAt": "2026-10-10T20:29:37.108Z"
 }
