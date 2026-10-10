@@ -2,7 +2,7 @@ name: Update Patch Data
 
 on:
   schedule:
-    - cron: '0 6 * * *'
+    - cron: '0 */6 * * *'
   workflow_dispatch:
 
 permissions:
@@ -23,10 +23,10 @@ jobs:
       - name: Run update script
         run: node update.js
 
-      - name: Commit and push data.json
+      - name: Commit and push
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add data.json
-          git diff --staged --quiet || git commit -m "🤖 Автообновление данных о патче"
+          git add data.json history.json
+          git diff --staged --quiet || git commit -m "🤖 Автообновление данных о патчах"
           git push
