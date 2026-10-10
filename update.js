@@ -7,48 +7,52 @@ https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0 (Dota2-Patch-Bot)' } }, (
   let data = '';
   res.on('data', (chunk) => { data += chunk; });
   res.on('end', () => {
-    console.log('=== ОТВЕТ API (первые 3000 символов) ===');
-    console.log(data.slice(0, 3000));
-    console.log('=== КОНЕЦ ОТВЕТА ===');
-
     try {
       const json = JSON.parse(data);
-      const patches = json.patches || json.patch_list || json.data || (Array.isArray(json) ? json : null);
+      const patches = json.patches || [];
 
-      if (!patches || patches.length === 0) {
-        console.log('❌ Список патчей не найден. Ключи верхнего уровня:', Object.keys(json));
-        process.exit(1);
+      if (patches.length === 0) {
+        throw new Error('Список патчей пуст');
       }
 
-      console.log('✅ Найдено патчей:', patches.length);
-      console.log('=== ПЕРВЫЙ ПАТЧ (структура) ===');
-      console.log(JSON.stringify(patches[0], null, 2));
-      console.log('=== КОНЕЦ ПЕРВОГО ПАТЧА ===');
+      const sorted = [...patches].sort((a, b) => a.patch_timestamp - b.patch_timestamp);
+      const latest = sorted[sorted.length - 1];
 
-      // Ищем все поля, которые хоть как-то могут быть датой
-      const first = patches[0];
-      const dateCandidates = [];
-      for (const key of Object.keys(first)) {
-        const val = first[key];
-        if (typeof val === 'string' && (val.includes('-') || val.includes('/') || val.includes(':'))) {
-          dateCandidates.push(`${key}: ${val}`);
-        }
-        if (typeof val === 'number' && val > 1000000000 && val < 9999999999) {
-          dateCandidates.push(`${key}: ${val} (возможно unix timestamp)`);
-        }
-      }
-      console.log('=== ПОЛЯ, ПОХОЖИЕ НА ДАТУ ===');
-      console.log(dateCandidates.length ? dateCandidates.join('\n') : 'НЕ НАЙДЕНО');
+      const version = latest.patch_number || latest.patch_name || 'unknown';
+      const releaseDate = new Date(latest.patch_timestamp * 1000);
 
-      // Далее — стандартная логика (на случай, если дата распознается)
-      const releaseDate = new Date(first.release_date || first.date || first.timestamp);
       if (isNaN(releaseDate.getTime())) {
-        throw new Error('Дата не распознана. Смотрите вывод выше.');
+        throw new Error('Не удалось распознать дату последнего патча');
       }
 
-      // ... остальная логика
-      console.log('✅ Дата распознана:', releaseDate.toISOString());
-      
+      const majors = sorted.filter(p => /^\d+\.\d+$/.test(p.patch_number));
+      const recent = majors.slice(-9);
+
+      const intervals = [];
+      for (let i = 1; i < recent.length; i++) {
+        const diffDays = (recent[i].patch_timestamp - recent[i - 1].patch_timestamp) / 86400;
+        if (diffDays > 30 && diffDays < 400) intervals.push(diffDays);
+      }
+
+      const avgInterval = intervals.length
+        ? Math.round(intervals.reduce((a, b) => a + b, 0) / intervals.length)
+        : 150;
+
+      const estimatedNext = new Date(releaseDate.getTime() + avgInterval * 86400000);
+      const daysSince = Math.floor((Date.now() - releaseDate.getTime()) / 86400000);
+
+      const output = {
+        currentVersion: version,
+        currentDate: releaseDate.toISOString().split('T')[0],
+        daysSince: daysSince,
+        estimatedNextDate: estimatedNext.toISOString().split('T')[0],
+        averageIntervalDays: avgInterval,
+        updatedAt: new Date().toISOString()
+      };
+
+      fs.writeFileSync('data.json', JSON.stringify(output, null, 2));
+      console.log('✅ data.json обновлён:');
+      console.log(JSON.stringify(output, null, 2));
     } catch (e) {
       console.error('❌ Ошибка:', e.message);
       process.exit(1);
