@@ -20,14 +20,6 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install SteamCMD
-        run: |
-          mkdir -p ~/steamcmd
-          cd ~/steamcmd
-          curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf -
-          ./steamcmd.sh +quit
-          echo "SteamCMD установлен"
-
       - name: Run update script
         run: node update.js
 
