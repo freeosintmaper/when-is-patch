@@ -3,59 +3,58 @@ const fs = require('fs');
 
 const url = 'https://www.dota2.com/datafeed/patchnoteslist?language=english';
 
-https.get(url, (res) => {
+https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0 (Dota2-Patch-Bot)' } }, (res) => {
   let data = '';
   res.on('data', (chunk) => { data += chunk; });
   res.on('end', () => {
+    console.log('=== ОТВЕТ API (первые 3000 символов) ===');
+    console.log(data.slice(0, 3000));
+    console.log('=== КОНЕЦ ОТВЕТА ===');
+
     try {
       const json = JSON.parse(data);
-      const patches = json.patches || [];
+      const patches = json.patches || json.patch_list || json.data || (Array.isArray(json) ? json : null);
 
-      if (patches.length === 0) {
-        throw new Error('No patches found in response');
+      if (!patches || patches.length === 0) {
+        console.log('❌ Список патчей не найден. Ключи верхнего уровня:', Object.keys(json));
+        process.exit(1);
       }
 
-      const latest = patches[0];
-      const version = latest.patch_number || latest.version || 'unknown';
-      const releaseDate = new Date(latest.release_date);
+      console.log('✅ Найдено патчей:', patches.length);
+      console.log('=== ПЕРВЫЙ ПАТЧ (структура) ===');
+      console.log(JSON.stringify(patches[0], null, 2));
+      console.log('=== КОНЕЦ ПЕРВОГО ПАТЧА ===');
 
-      // Считаем средний интервал между последними крупными патчами (берём до 6 штук)
-      const intervals = [];
-      for (let i = 1; i < Math.min(6, patches.length); i++) {
-        const prev = new Date(patches[i].release_date);
-        const curr = new Date(patches[i - 1].release_date);
-        const diffDays = (curr - prev) / (1000 * 60 * 60 * 24);
-        if (diffDays > 0 && diffDays < 400) {
-          intervals.push(diffDays);
+      // Ищем все поля, которые хоть как-то могут быть датой
+      const first = patches[0];
+      const dateCandidates = [];
+      for (const key of Object.keys(first)) {
+        const val = first[key];
+        if (typeof val === 'string' && (val.includes('-') || val.includes('/') || val.includes(':'))) {
+          dateCandidates.push(`${key}: ${val}`);
+        }
+        if (typeof val === 'number' && val > 1000000000 && val < 9999999999) {
+          dateCandidates.push(`${key}: ${val} (возможно unix timestamp)`);
         }
       }
+      console.log('=== ПОЛЯ, ПОХОЖИЕ НА ДАТУ ===');
+      console.log(dateCandidates.length ? dateCandidates.join('\n') : 'НЕ НАЙДЕНО');
 
-      const avgInterval = intervals.length > 0
-        ? Math.round(intervals.reduce((a, b) => a + b, 0) / intervals.length)
-        : 150;
+      // Далее — стандартная логика (на случай, если дата распознается)
+      const releaseDate = new Date(first.release_date || first.date || first.timestamp);
+      if (isNaN(releaseDate.getTime())) {
+        throw new Error('Дата не распознана. Смотрите вывод выше.');
+      }
 
-      const estimatedNext = new Date(releaseDate);
-      estimatedNext.setDate(estimatedNext.getDate() + avgInterval);
-
-      const daysSince = Math.floor((new Date() - releaseDate) / (1000 * 60 * 60 * 24));
-
-      const output = {
-        currentVersion: version,
-        currentDate: releaseDate.toISOString().split('T')[0],
-        daysSince: daysSince,
-        estimatedNextDate: estimatedNext.toISOString().split('T')[0],
-        averageIntervalDays: avgInterval,
-        updatedAt: new Date().toISOString()
-      };
-
-      fs.writeFileSync('data.json', JSON.stringify(output, null, 2));
-      console.log('✅ data.json успешно обновлён:', output);
+      // ... остальная логика
+      console.log('✅ Дата распознана:', releaseDate.toISOString());
+      
     } catch (e) {
-      console.error('❌ Ошибка обработки данных:', e.message);
+      console.error('❌ Ошибка:', e.message);
       process.exit(1);
     }
   });
 }).on('error', (err) => {
-  console.error('❌ Ошибка запроса:', err.message);
+  console.error('❌ Ошибка сети:', err.message);
   process.exit(1);
 });
