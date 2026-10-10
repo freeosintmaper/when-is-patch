@@ -14,10 +14,7 @@ function get(url) {
     https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (res) => {
       let data = '';
       res.on('data', c => data += c);
-      res.on('end', () => {
-        try { resolve(JSON.parse(data)); }
-        catch (e) { reject(new Error('Bad JSON from ' + url)); }
-      });
+      res.on('end', () => resolve(data)); // Возвращаем сырые данные
     }).on('error', reject);
   });
 }
@@ -31,13 +28,27 @@ function median(arr) {
   return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
 }
 
+// Универсальная функция для получения версии
 async function getClientVersion(appid) {
   try {
-    // Главное — этот эндпоинт. Он работает для любого appid.
-    const url = `https://api.steampowered.com/IGCVersion_${appid}/GetClientVersion/v1/`;
-    const json = await get(url);
-    const v = json && json.response && (json.response.version || json.response.change_number);
-    return v ? String(v) : null;
+    // Используем v0001 и просим JSON, но будем готовы и к XML
+    const url = `https://api.steampowered.com/IGCVersion_${appid}/GetClientVersion/v0001/?format=json`;
+    const raw = await get(url);
+    let version = null;
+
+    // Пытаемся распарсить как JSON
+    try {
+      const json = JSON.parse(raw);
+      version = json?.response?.version || json?.response?.change_number;
+    } catch (e) {
+      // Если не JSON, пробуем вытащить из XML с помощью регулярки
+      const match = raw.match(/<client_version>(\d+)<\/client_version>/);
+      if (match && match[1]) {
+        version = match[1];
+      }
+    }
+    
+    return version ? String(version) : null;
   } catch (e) {
     console.error(`⚠️  appid ${appid}: ${e.message}`);
     return null;
@@ -52,7 +63,7 @@ async function getClientVersion(appid) {
     const now = new Date().toISOString();
     const versions = {};
 
-    // 1. Текущие версии всех трёх веток
+    // 1. Получаем версии всех трёх веток
     for (const b of BRANCHES) {
       const v = await getClientVersion(b.appid);
       if (v) {
@@ -69,8 +80,10 @@ async function getClientVersion(appid) {
       }
     }
 
+    // ... (остальная часть скрипта для патчей и сигналов остаётся без изменений)
     // 2. Патчи
-    const patchData = await get(PATCHES_URL);
+    const patchDataRaw = await get(PATCHES_URL);
+    const patchData = JSON.parse(patchDataRaw); // Здесь точно JSON
     const patches = patchData.patches || [];
     const sorted = [...patches].sort((a, b) => a.patch_timestamp - b.patch_timestamp);
     const latest = sorted[sorted.length - 1];
