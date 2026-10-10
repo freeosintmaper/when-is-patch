@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Когда патч? — Dota 2</title>
+<title>Когда патч? — Признаки обновления Dota 2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -11,11 +11,12 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
     --bg-dark: #0a0a12;
-    --bg-card: rgba(22, 22, 35, 0.75);
+    --bg-card: rgba(22, 22, 35, 0.78);
     --red: #e74c3c;
-    --red-glow: #ff4d3d;
     --gold: #f0b232;
     --gold-light: #ffd966;
+    --green: #4ade80;
+    --grey: #6b7280;
     --text: #e8e8f0;
     --text-dim: #8a8a9e;
     --border: rgba(240, 178, 50, 0.15);
@@ -29,8 +30,7 @@
   }
   body::before {
     content: '';
-    position: fixed;
-    inset: 0;
+    position: fixed; inset: 0;
     background:
       radial-gradient(circle at 15% 20%, rgba(231, 76, 60, 0.18), transparent 45%),
       radial-gradient(circle at 85% 80%, rgba(240, 178, 50, 0.12), transparent 50%),
@@ -44,8 +44,7 @@
   }
   body::after {
     content: '';
-    position: fixed;
-    inset: 0;
+    position: fixed; inset: 0;
     background-image:
       linear-gradient(rgba(240, 178, 50, 0.03) 1px, transparent 1px),
       linear-gradient(90deg, rgba(240, 178, 50, 0.03) 1px, transparent 1px);
@@ -55,13 +54,11 @@
     -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);
   }
   .container {
-    max-width: 640px;
-    margin: 0 auto;
+    max-width: 640px; margin: 0 auto;
     padding: 3rem 1.5rem 4rem;
-    position: relative;
-    z-index: 1;
+    position: relative; z-index: 1;
   }
-  .header { text-align: center; margin-bottom: 3rem; animation: fadeDown 0.8s ease-out; }
+  .header { text-align: center; margin-bottom: 2.5rem; animation: fadeDown 0.8s ease-out; }
   @keyframes fadeDown {
     from { opacity: 0; transform: translateY(-20px); }
     to   { opacity: 1; transform: translateY(0); }
@@ -78,65 +75,48 @@
   h1 {
     font-family: 'Rajdhani', sans-serif;
     font-size: clamp(2.2rem, 6vw, 3.2rem);
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    line-height: 1.1;
+    font-weight: 700; letter-spacing: 0.02em; line-height: 1.1;
     background: linear-gradient(135deg, #fff 0%, var(--gold) 50%, var(--red) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
+    -webkit-background-clip: text; background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
+    text-transform: uppercase; margin-bottom: 0.5rem;
   }
-  .subtitle { color: var(--text-dim); font-size: 1rem; font-weight: 400; }
+  .subtitle { color: var(--text-dim); font-size: 1rem; }
   .card {
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: 20px;
-    padding: 1.75rem;
-    margin-bottom: 1.25rem;
+    padding: 1.75rem; margin-bottom: 1.25rem;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    position: relative;
-    overflow: hidden;
+    position: relative; overflow: hidden;
     animation: fadeUp 0.8s ease-out backwards;
-    transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.3s ease, border-color 0.3s ease;
   }
   .card:nth-child(2) { animation-delay: 0.1s; }
   .card:nth-child(3) { animation-delay: 0.2s; }
+  .card:nth-child(4) { animation-delay: 0.3s; }
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(20px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-  .card:hover {
-    transform: translateY(-3px);
-    border-color: rgba(240, 178, 50, 0.35);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.4), 0 0 30px rgba(240, 178, 50, 0.08);
-  }
   .card::before {
     content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
     background: linear-gradient(90deg, transparent, var(--gold), transparent);
     opacity: 0.6;
   }
   .card-label {
     font-family: 'Rajdhani', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--text-dim);
-    margin-bottom: 0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
+    font-size: 0.85rem; font-weight: 600;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: var(--text-dim); margin-bottom: 1rem;
+    display: flex; align-items: center; gap: 0.5rem;
   }
   .card-label .dot {
     width: 8px; height: 8px; border-radius: 50%;
     background: var(--red);
-    box-shadow: 0 0 10px var(--red-glow);
+    box-shadow: 0 0 10px var(--red);
     animation: blink 2s ease-in-out infinite;
   }
   @keyframes blink {
@@ -144,121 +124,107 @@
     50%      { opacity: 0.3; }
   }
   .card-label.gold .dot { background: var(--gold); box-shadow: 0 0 10px var(--gold); }
+
+  .verdict { text-align: center; padding: 0.5rem 0; }
+  .verdict-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(1.7rem, 5.5vw, 2.3rem);
+    font-weight: 700; line-height: 1.15; margin-bottom: 0.6rem;
+  }
+  .verdict[data-level="quiet"] .verdict-title { color: var(--text-dim); }
+  .verdict[data-level="warn"]  .verdict-title {
+    color: var(--gold-light);
+    filter: drop-shadow(0 0 18px rgba(240,178,50,0.5));
+  }
+  .verdict[data-level="hot"]   .verdict-title {
+    background: linear-gradient(135deg, var(--gold-light), var(--red));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 20px rgba(231,76,60,0.5));
+  }
+  .verdict-text { color: var(--text-dim); font-size: 0.95rem; line-height: 1.5; }
+
+  .patch-row {
+    display: flex; align-items: baseline; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+  }
   .patch-version {
     font-family: 'Rajdhani', sans-serif;
-    font-size: clamp(2.5rem, 8vw, 3.5rem);
-    font-weight: 700;
-    color: #fff;
-    line-height: 1;
+    font-size: clamp(2rem, 7vw, 2.6rem);
+    font-weight: 700; color: #fff; line-height: 1;
     letter-spacing: 0.02em;
-    display: inline-block;
     text-shadow: 0 0 30px rgba(231, 76, 60, 0.5);
   }
   .patch-version::before {
-    content: 'v';
-    font-size: 0.5em;
-    color: var(--red);
-    margin-right: 0.1em;
-    vertical-align: top;
-    opacity: 0.8;
+    content: 'v'; font-size: 0.5em; color: var(--red);
+    margin-right: 0.1em; vertical-align: top; opacity: 0.8;
   }
-  .patch-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    margin-top: 1.25rem;
-    padding-top: 1.25rem;
-    border-top: 1px solid rgba(255,255,255,0.06);
+  .patch-date { color: var(--text-dim); font-size: 0.9rem; text-align: right; }
+  .patch-date strong { color: var(--text); display: block; font-size: 1rem; }
+
+  .signals-list { display: flex; flex-direction: column; gap: 0.75rem; }
+  .signal {
+    display: grid; grid-template-columns: 10px 1fr auto;
+    gap: 1rem; align-items: center;
+    padding: 0.9rem 1rem;
+    background: rgba(255,255,255,0.025);
+    border-radius: 12px;
+    border-left: 3px solid var(--grey);
+    transition: background 0.2s;
   }
-  .meta-item { flex: 1; min-width: 140px; }
-  .meta-item .key {
-    font-size: 0.75rem;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    margin-bottom: 0.35rem;
+  .signal:hover { background: rgba(255,255,255,0.045); }
+  .signal[data-status="wait"] { border-left-color: var(--red); }
+  .signal[data-status="calm"] { border-left-color: var(--green); }
+  .signal-dot {
+    width: 10px; height: 10px; border-radius: 50%; background: var(--grey);
   }
-  .meta-item .value {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: 1.4rem;
-    font-weight: 600;
-    color: var(--text);
+  .signal[data-status="wait"] .signal-dot {
+    background: var(--red); box-shadow: 0 0 10px var(--red);
+    animation: blink 1.5s ease-in-out infinite;
   }
-  .progress-wrap { margin-top: 1.5rem; }
-  .progress-bar {
-    height: 10px;
-    background: rgba(255,255,255,0.06);
-    border-radius: 999px;
-    overflow: hidden;
-    position: relative;
-    box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+  .signal[data-status="calm"] .signal-dot {
+    background: var(--green); box-shadow: 0 0 8px var(--green);
   }
-  .progress-fill {
-    height: 100%;
-    width: 0%;
-    background: linear-gradient(90deg, var(--red), var(--gold));
-    border-radius: 999px;
-    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-    box-shadow: 0 0 15px rgba(240, 178, 50, 0.5);
+  .signal-info { min-width: 0; }
+  .signal-label {
+    font-family: 'Rajdhani', sans-serif; font-weight: 600;
+    font-size: 1rem; color: var(--text); letter-spacing: 0.02em;
   }
-  .progress-fill::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-    animation: shimmer 2s infinite;
+  .signal-note {
+    font-size: 0.8rem; color: var(--text-dim);
+    margin-top: 0.15rem; line-height: 1.4;
   }
-  @keyframes shimmer {
-    0%   { transform: translateX(-100%); }
-    100% { transform: translateX(100%); }
+  .signal-value {
+    font-family: 'Rajdhani', sans-serif; font-weight: 700;
+    font-size: 1.15rem; color: var(--text); white-space: nowrap;
   }
-  .progress-info {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
-    color: var(--text-dim);
-    margin-top: 0.5rem;
-    font-family: 'Rajdhani', sans-serif;
-    font-weight: 600;
-  }
-  .prediction { text-align: center; padding: 0.5rem 0 0.25rem; }
-  .prediction-date {
-    font-family: 'Rajdhani', sans-serif;
-    font-size: clamp(2rem, 7vw, 2.75rem);
-    font-weight: 700;
-    background: linear-gradient(135deg, var(--gold-light), var(--gold));
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    line-height: 1.1;
-    filter: drop-shadow(0 0 20px rgba(240, 178, 50, 0.4));
-  }
-  .prediction-sub { margin-top: 0.5rem; color: var(--text-dim); font-size: 0.9rem; }
+  .signal[data-status="wait"] .signal-value { color: var(--gold-light); }
+  .signal[data-status="calm"] .signal-value { color: var(--green); }
+
   .disclaimer {
-    margin-top: 1.25rem;
-    padding: 0.75rem 1rem;
+    margin-top: 0.5rem; padding: 1rem 1.15rem;
     background: rgba(231, 76, 60, 0.08);
     border-left: 3px solid var(--red);
-    border-radius: 6px;
-    font-size: 0.8rem;
-    color: var(--text-dim);
-    line-height: 1.5;
-    text-align: left;
+    border-radius: 8px;
+    font-size: 0.8rem; color: var(--text-dim);
+    line-height: 1.55;
   }
+  .disclaimer b { color: var(--text); font-weight: 600; }
+
   .footer {
-    text-align: center;
-    margin-top: 2rem;
-    font-size: 0.8rem;
-    color: var(--text-dim);
+    text-align: center; margin-top: 2rem;
+    font-size: 0.8rem; color: var(--text-dim);
     animation: fadeUp 0.8s ease-out 0.4s backwards;
   }
   .footer a { color: var(--gold); text-decoration: none; transition: opacity 0.2s; }
   .footer a:hover { opacity: 0.7; }
+  .updated { margin-top: 0.5rem; font-size: 0.75rem; opacity: 0.6; }
+
   @media (max-width: 480px) {
     .container { padding: 2rem 1rem 3rem; }
     .card { padding: 1.25rem; border-radius: 16px; }
-    .patch-meta { gap: 1rem; }
+    .signal { padding: 0.75rem 0.85rem; gap: 0.75rem; }
+    .patch-date { text-align: left; }
   }
 </style>
 </head>
@@ -277,32 +243,26 @@
         </defs>
       </svg>
       <h1>Когда патч?</h1>
-      <p class="subtitle">Следи за обновлениями Dota 2</p>
+      <p class="subtitle">Признаки скорого обновления Dota 2</p>
     </header>
+
+    <section class="card">
+      <div class="verdict" id="verdict" data-level="quiet">
+        <div class="verdict-title" id="verdict-title">Считаем...</div>
+        <div class="verdict-text" id="verdict-text">Загружаем данные о патчах</div>
+      </div>
+    </section>
 
     <section class="card">
       <div class="card-label">
         <span class="dot"></span>
         Текущий патч
       </div>
-      <div class="patch-version" id="version">7.XX</div>
-      <div class="patch-meta">
-        <div class="meta-item">
-          <div class="key">Дата выхода</div>
-          <div class="value" id="date">—</div>
-        </div>
-        <div class="meta-item">
-          <div class="key">Прошло дней</div>
-          <div class="value" id="days">—</div>
-        </div>
-      </div>
-      <div class="progress-wrap">
-        <div class="progress-bar">
-          <div class="progress-fill" id="progress"></div>
-        </div>
-        <div class="progress-info">
-          <span id="progress-left">0 дней</span>
-          <span id="progress-right">~150 дней</span>
+      <div class="patch-row">
+        <div class="patch-version" id="version">7.XX</div>
+        <div class="patch-date">
+          <strong id="date">—</strong>
+          прошло <span id="days">—</span> дн.
         </div>
       </div>
     </section>
@@ -310,20 +270,30 @@
     <section class="card">
       <div class="card-label gold">
         <span class="dot"></span>
-        Прогноз следующего патча
+        Сигналы
       </div>
-      <div class="prediction">
-        <div class="prediction-date" id="next">—</div>
-        <div class="prediction-sub" id="next-sub">Рассчитываем...</div>
-      </div>
-      <div class="disclaimer">
-        Это статистический прогноз на основе среднего интервала между прошлыми патчами.
-        Valve не объявляет даты заранее, поэтому дата может сдвинуться.
+      <div class="signals-list" id="signals">
+        <div class="signal" data-status="calm">
+          <div class="signal-dot"></div>
+          <div class="signal-info">
+            <div class="signal-label">Загрузка...</div>
+            <div class="signal-note">Считаем признаки</div>
+          </div>
+          <div class="signal-value">—</div>
+        </div>
       </div>
     </section>
 
+    <div class="disclaimer">
+      <b>Как это работает.</b> Valve не объявляет даты заранее. Сайт смотрит на <b>публичные данные Steam</b>:
+      версии веток Public / Staging / Experimental и официальный список патчей.
+      Staging — служебная ветка Valve: перед всеми 7 крупными патчами она менялась в последние сутки до анонса.
+      Но часто меняется и вхолостую — красный сигнал это повод заглянуть на сайт, а не гарантия.
+    </div>
+
     <footer class="footer">
-      Сделано для сообщества Dota 2 · <a href="https://www.dota2.com/patches" target="_blank" rel="noopener">Официальные патчи</a>
+      <div>Сделано для сообщества Dota 2 · <a href="https://www.dota2.com/patches" target="_blank" rel="noopener">Официальные патчи</a></div>
+      <div class="updated" id="updated"></div>
     </footer>
   </div>
 
@@ -331,42 +301,60 @@
 fetch('data.json?v=' + Date.now())
   .then(r => r.json())
   .then(data => {
-    const avg = data.averageIntervalDays || 150;
     document.getElementById('version').textContent = data.currentVersion || '—';
     document.getElementById('days').textContent = data.daysSince ?? '—';
 
-    const dateObj = new Date(data.currentDate);
-    const dateStr = dateObj.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
-    document.getElementById('date').textContent = dateStr;
+    const d = new Date(data.currentDate);
+    document.getElementById('date').textContent = d.toLocaleDateString('ru-RU', {
+      day: 'numeric', month: 'long', year: 'numeric'
+    });
 
-    const nextObj = new Date(data.estimatedNextDate);
-    const nextStr = nextObj.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
-    document.getElementById('next').textContent = nextStr;
+    const sigs = data.signals || [];
+    document.getElementById('signals').innerHTML = sigs.map(s => `
+      <div class="signal" data-status="${s.status}">
+        <div class="signal-dot"></div>
+        <div class="signal-info">
+          <div class="signal-label">${s.label}</div>
+          <div class="signal-note">${s.note}</div>
+        </div>
+        <div class="signal-value">${s.value}</div>
+      </div>
+    `).join('');
 
-    const daysLeft = Math.max(0, Math.round((nextObj - new Date()) / 86400000));
-    document.getElementById('next-sub').textContent = daysLeft > 0
-      ? `Примерно через ${daysLeft} ${plural(daysLeft, 'день', 'дня', 'дней')}`
-      : 'Ожидается со дня на день';
+    const waiting = data.waitingSignals || 0;
+    const total = sigs.length || 3;
+    let level, title, text;
+    if (waiting === 0) {
+      level = 'quiet'; title = 'Пока тихо';
+      text = 'Все сигналы в пределах обычного. Спешить некуда.';
+    } else if (waiting === 1) {
+      level = 'warn'; title = 'Есть сигнал';
+      text = 'Один признак выбивается из обычного ритма. Возможны новости в ближайшие дни.';
+    } else if (waiting === 2) {
+      level = 'warn'; title = 'Похоже, патч близко';
+      text = `${waiting} из ${total} сигналов указывают на скорое обновление. Следи за новостями.`;
+    } else {
+      level = 'hot'; title = 'Скоро патч';
+      text = `Все ${total} сигнала указывают на скорое обновление. Ждём анонс.`;
+    }
+    const v = document.getElementById('verdict');
+    v.dataset.level = level;
+    document.getElementById('verdict-title').textContent = title;
+    document.getElementById('verdict-text').textContent = text;
 
-    const pct = Math.min(100, (data.daysSince / avg) * 100);
-    setTimeout(() => {
-      document.getElementById('progress').style.width = pct + '%';
-    }, 300);
-    document.getElementById('progress-left').textContent = data.daysSince + ' дней';
-    document.getElementById('progress-right').textContent = '~' + avg + ' дней';
+    if (data.updatedAt) {
+      const u = new Date(data.updatedAt);
+      document.getElementById('updated').textContent =
+        'Данные обновлены: ' + u.toLocaleString('ru-RU', {
+          day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit'
+        });
+    }
   })
   .catch(err => {
     console.error(err);
-    document.getElementById('version').textContent = 'Ошибка';
-    document.getElementById('next-sub').textContent = 'Не удалось загрузить данные';
+    document.getElementById('verdict-title').textContent = 'Ошибка загрузки';
+    document.getElementById('verdict-text').textContent = 'Не удалось получить data.json';
   });
-
-function plural(n, one, few, many) {
-  const m10 = n % 10, m100 = n % 100;
-  if (m10 === 1 && m100 !== 11) return one;
-  if (m10 >= 2 && m10 <= 4 && (m100 < 10 || m100 >= 20)) return few;
-  return many;
-}
 </script>
 </body>
 </html>
