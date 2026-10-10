@@ -1,1 +1,37 @@
-{}
+{
+  "currentVersion": "7.41f",
+  "currentDate": "2026-09-15",
+  "daysSince": 25,
+  "medianPause": 27,
+  "versions": {
+    "Public": "6957",
+    "Staging": "3332",
+    "Experimental": "7448"
+  },
+  "signals": [
+    {
+      "key": "staging",
+      "label": "Staging",
+      "value": "v3332",
+      "note": "История только собирается — нужно пару дней наблюдений",
+      "status": "calm"
+    },
+    {
+      "key": "pause",
+      "label": "Пауза после патча",
+      "value": "25 дн.",
+      "note": "Обычно 27 дн. — в норме",
+      "status": "calm"
+    },
+    {
+      "key": "experimental",
+      "label": "Experimental",
+      "value": "v7448",
+      "note": "Фоновая ветка — со сроками патча не связана",
+      "status": "calm"
+    }
+  ],
+  "waitingSignals": 0,
+  "historySize": 3,
+  "updatedAt": "2026-10-10T21:34:59.891Z"
+}
