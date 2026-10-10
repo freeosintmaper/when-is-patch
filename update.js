@@ -2,19 +2,15 @@ const https = require('https');
 const fs = require('fs');
 
 const PATCHES_URL = 'https://www.dota2.com/datafeed/patchnoteslist?language=english';
-
-const BRANCHES = [
-  { name: 'Public',       appid: 570 },
-  { name: 'Staging',      appid: 2305270 },
-  { name: 'Experimental', appid: 247040 }
-];
+// Публичная веб-версия канала — доступна без авторизации
+const TELEGRAM_URL = 'https://t.me/s/DOTA_DM_SPAM';
 
 function get(url) {
   return new Promise((resolve, reject) => {
-    https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0' } }, (res) => {
+    https.get(url, { headers: { 'User-Agent': 'Mozilla/5.0 (Dota2-Patch-Bot)' } }, (res) => {
       let data = '';
       res.on('data', c => data += c);
-      res.on('end', () => resolve(data)); // Возвращаем сырые данные
+      res.on('end', () => resolve(data));
     }).on('error', reject);
   });
 }
@@ -28,31 +24,28 @@ function median(arr) {
   return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
 }
 
-// Универсальная функция для получения версии
-async function getClientVersion(appid) {
-  try {
-    // Используем v0001 и просим JSON, но будем готовы и к XML
-    const url = `https://api.steampowered.com/IGCVersion_${appid}/GetClientVersion/v0001/?format=json`;
-    const raw = await get(url);
-    let version = null;
-
-    // Пытаемся распарсить как JSON
-    try {
-      const json = JSON.parse(raw);
-      version = json?.response?.version || json?.response?.change_number;
-    } catch (e) {
-      // Если не JSON, пробуем вытащить из XML с помощью регулярки
-      const match = raw.match(/<client_version>(\d+)<\/client_version>/);
-      if (match && match[1]) {
-        version = match[1];
-      }
-    }
-    
-    return version ? String(version) : null;
-  } catch (e) {
-    console.error(`⚠️  appid ${appid}: ${e.message}`);
-    return null;
+/**
+ * Вытаскивает из HTML-страницы Telegram последние сообщения
+ * и находит в них строки вида "[v] 2305270 - Dota 2 Staging 3330 => 3332"
+ */
+function parseTelegramVersions(html) {
+  const result = {};
+  // Ищем блоки сообщений
+  const msgRegex = /<div class="tgme_widget_message_text[^"]*"[^>]*>([\s\S]*?)<\/div>/g;
+  let m;
+  while ((m = msgRegex.exec(html)) !== null) {
+    const text = m[1].replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    // Public (570)
+    let pub = text.match(/\[v\]\s*570\s*-\s*Dota 2\s+(\d+)\s*=>\s*(\d+)/i);
+    if (pub) result.Public = pub[2];
+    // Staging (2305270)
+    let st = text.match(/\[v\]\s*2305270\s*-\s*Dota 2 Staging\s+(\d+)\s*=>\s*(\d+)/i);
+    if (st) result.Staging = st[2];
+    // Experimental (247040)
+    let ex = text.match(/\[v\]\s*247040\s*-\s*Dota 2 Experimental\s+(\d+)\s*=>\s*(\d+)/i);
+    if (ex) result.Experimental = ex[2];
   }
+  return result;
 }
 
 (async () => {
@@ -63,27 +56,29 @@ async function getClientVersion(appid) {
     const now = new Date().toISOString();
     const versions = {};
 
-    // 1. Получаем версии всех трёх веток
-    for (const b of BRANCHES) {
-      const v = await getClientVersion(b.appid);
+    // 1. Версии из Telegram
+    const tgHtml = await get(TELEGRAM_URL);
+    const tgVersions = parseTelegramVersions(tgHtml);
+    console.log('📡 Telegram:', tgVersions);
+
+    for (const branch of ['Public', 'Staging', 'Experimental']) {
+      const v = tgVersions[branch];
       if (v) {
-        versions[b.name] = v;
-        const last = [...history].reverse().find(h => h.branch === b.name);
+        versions[branch] = v;
+        const last = [...history].reverse().find(h => h.branch === branch);
         if (!last || last.version !== v) {
-          history.push({ branch: b.name, version: v, timestamp: now });
-          console.log(`📝 ${b.name}: ${last ? last.version + ' → ' : ''}${v}`);
+          history.push({ branch, version: v, timestamp: now });
+          console.log(`📝 ${branch}: ${last ? last.version + ' → ' : ''}${v}`);
         } else {
-          console.log(`   ${b.name}: ${v} (без изменений)`);
+          console.log(`   ${branch}: ${v} (без изменений)`);
         }
       } else {
-        console.log(`❌ ${b.name}: не получено`);
+        console.log(`⚠️  ${branch}: не найдено в последних сообщениях`);
       }
     }
 
-    // ... (остальная часть скрипта для патчей и сигналов остаётся без изменений)
-    // 2. Патчи
-    const patchDataRaw = await get(PATCHES_URL);
-    const patchData = JSON.parse(patchDataRaw); // Здесь точно JSON
+    // 2. Патчи (официальный список)
+    const patchData = JSON.parse(await get(PATCHES_URL));
     const patches = patchData.patches || [];
     const sorted = [...patches].sort((a, b) => a.patch_timestamp - b.patch_timestamp);
     const latest = sorted[sorted.length - 1];
@@ -109,8 +104,7 @@ async function getClientVersion(appid) {
       const c24 = st.filter(h => hoursAgo(h.timestamp) <= 24).length;
       const c7  = st.filter(h => hoursAgo(h.timestamp) <= 168).length;
 
-      let status = 'calm';
-      let note;
+      let status = 'calm', note;
       if (st.length < 2) {
         note = 'История только собирается — нужно пару дней наблюдений';
       } else if (hAgo <= 24 && c24 >= 3) {
