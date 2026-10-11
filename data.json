@@ -6,7 +6,7 @@
   "versions": {
     "Public": "6957",
     "Staging": "3332",
-    "Experimental": "7448"
+    "Experimental": "7450"
   },
   "signals": [
     {
@@ -26,12 +26,12 @@
     {
       "key": "experimental",
       "label": "Experimental",
-      "value": "v7448",
-      "note": "Фоновая ветка — со сроками патча не связана",
+      "value": "v7450",
+      "note": "2 смен за 7 дн. — обычный фон",
       "status": "calm"
     }
   ],
   "waitingSignals": 0,
-  "historySize": 3,
-  "updatedAt": "2026-10-10T21:34:59.891Z"
+  "historySize": 4,
+  "updatedAt": "2026-10-11T00:04:03.365Z"
 }
