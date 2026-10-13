@@ -1,7 +1,7 @@
 {
   "currentVersion": "7.41f",
   "currentDate": "2026-09-15",
-  "daysSince": 27,
+  "daysSince": 28,
   "medianPause": 27,
   "versions": {
     "Public": "6958",
@@ -19,9 +19,9 @@
     {
       "key": "pause",
       "label": "Пауза после патча",
-      "value": "27 дн.",
-      "note": "Обычно 27 дн. — в норме",
-      "status": "calm"
+      "value": "28 дн.",
+      "note": "Дольше обычных 27 дн.",
+      "status": "wait"
     },
     {
       "key": "experimental",
@@ -31,7 +31,7 @@
       "status": "calm"
     }
   ],
-  "waitingSignals": 0,
+  "waitingSignals": 1,
   "historySize": 6,
-  "updatedAt": "2026-10-13T06:35:19.613Z"
+  "updatedAt": "2026-10-13T07:05:39.215Z"
 }
