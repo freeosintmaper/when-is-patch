@@ -4,7 +4,7 @@
   "daysSince": 30,
   "medianPause": 27,
   "versions": {
-    "Public": "6960",
+    "Public": "6961",
     "Staging": "3332",
     "Experimental": "7457"
   },
@@ -32,6 +32,6 @@
     }
   ],
   "waitingSignals": 1,
-  "historySize": 11,
-  "updatedAt": "2026-10-15T17:12:25.071Z"
+  "historySize": 12,
+  "updatedAt": "2026-10-15T17:38:25.907Z"
 }
