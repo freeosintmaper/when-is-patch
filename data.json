@@ -6,7 +6,7 @@
   "versions": {
     "Public": "6962",
     "Staging": "3332",
-    "Experimental": "7461"
+    "Experimental": "7462"
   },
   "signals": [
     {
@@ -26,12 +26,12 @@
     {
       "key": "experimental",
       "label": "Experimental",
-      "value": "v7461",
-      "note": "10 смен за 7 дн. — обычный фон",
+      "value": "v7462",
+      "note": "11 смен за 7 дн. — обычный фон",
       "status": "calm"
     }
   ],
   "waitingSignals": 1,
-  "historySize": 16,
-  "updatedAt": "2026-10-17T18:11:20.604Z"
+  "historySize": 17,
+  "updatedAt": "2026-10-17T18:36:27.203Z"
 }
