@@ -27,11 +27,11 @@
       "key": "experimental",
       "label": "Experimental",
       "value": "v7469",
-      "note": "13 смен за 7 дн. — обычный фон",
+      "note": "12 смен за 7 дн. — обычный фон",
       "status": "calm"
     }
   ],
   "waitingSignals": 1,
   "historySize": 25,
-  "updatedAt": "2026-10-20T23:33:33.810Z"
+  "updatedAt": "2026-10-21T00:00:22.404Z"
 }
