@@ -4,7 +4,7 @@
   "daysSince": 42,
   "medianPause": 27,
   "versions": {
-    "Public": "6968",
+    "Public": "6969",
     "Staging": "3332",
     "Experimental": "7475"
   },
@@ -27,11 +27,11 @@
       "key": "experimental",
       "label": "Experimental",
       "value": "v7475",
-      "note": "6 смен за 7 дн. — обычный фон",
+      "note": "5 смен за 7 дн. — обычный фон",
       "status": "calm"
     }
   ],
   "waitingSignals": 1,
-  "historySize": 33,
-  "updatedAt": "2026-10-27T20:16:59.501Z"
+  "historySize": 34,
+  "updatedAt": "2026-10-27T23:52:38.582Z"
 }
