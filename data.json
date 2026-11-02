@@ -1,7 +1,7 @@
 {
   "currentVersion": "7.41f",
   "currentDate": "2026-09-15",
-  "daysSince": 47,
+  "daysSince": 48,
   "medianPause": 27,
   "versions": {
     "Public": "6969",
@@ -19,7 +19,7 @@
     {
       "key": "pause",
       "label": "Пауза после патча",
-      "value": "47 дн.",
+      "value": "48 дн.",
       "note": "Дольше обычных 27 дн.",
       "status": "wait"
     },
@@ -33,5 +33,5 @@
   ],
   "waitingSignals": 1,
   "historySize": 43,
-  "updatedAt": "2026-11-02T01:37:04.602Z"
+  "updatedAt": "2026-11-02T08:15:30.236Z"
 }
