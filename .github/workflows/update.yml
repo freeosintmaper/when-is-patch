@@ -8,9 +8,15 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: update-patch-data
+  cancel-in-progress: false
+
 jobs:
   update:
+    name: Fetch and validate Dota 2 versions
     runs-on: ubuntu-latest
+    timeout-minutes: 5
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -20,8 +26,38 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Run update script
+      - name: Check updater syntax
+        run: node --check update.js
+
+      - name: Collect data
         run: node update.js
+
+      - name: Validate generated JSON
+        run: |
+          node <<'NODE'
+          const fs = require('fs');
+          const data = JSON.parse(fs.readFileSync('data.json', 'utf8'));
+          const history = JSON.parse(fs.readFileSync('history.json', 'utf8'));
+          const branches = ['Public', 'Staging', 'Experimental'];
+
+          if (!data || typeof data !== 'object') throw new Error('data.json is not an object');
+          if (!data.versions || !branches.every((name) => data.versions[name])) {
+            throw new Error('One or more branch versions are missing');
+          }
+          if (!data.latestPatch || !data.latestPatch.version || !Number.isFinite(Date.parse(data.latestPatch.timestamp))) {
+            throw new Error('Latest official patch metadata is invalid');
+          }
+          if (!Array.isArray(history) || history.length !== data.historySize) {
+            throw new Error('history.json does not match data.historySize');
+          }
+          if (!Number.isFinite(Date.parse(data.updatedAt))) {
+            throw new Error('updatedAt is invalid');
+          }
+          console.log('Validated ' + history.length + ' history entries.');
+          NODE
+
+      - name: Check whitespace
+        run: git diff --check
 
       - name: Commit and push
         run: |
