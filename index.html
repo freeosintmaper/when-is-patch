@@ -772,7 +772,7 @@
       </div>
       <details class="faq-item">
         <summary>Когда выйдет следующий патч?</summary>
-        <p>Точной даты нет — Valve объявляет патч в момент выхода. Сайт показывает признаки: пауза после последнего патча, смены Staging и активность Experimental. Чем больше «красных» сигналов — тем ближе обновление, но это не гарантия.</p>
+        <p>Точной даты нет — Valve не публикует расписание патчей. Сайт сопоставляет паузу после официального патча и активность служебных веток. Эти показатели помогают следить за изменениями, но не позволяют надёжно вычислить дату выхода.</p>
       </details>
       <details class="faq-item">
         <summary>Что такое Staging и Experimental?</summary>
@@ -780,7 +780,11 @@
       </details>
       <details class="faq-item">
         <summary>Почему я вижу разные номера Public и Staging?</summary>
-        <p>У каждой ветки свой счётчик. Public 6957 и Staging 3332 — это <b>не одно и то же число в разных местах</b>, а разные ветки с независимой нумерацией. Сравнивать имеет смысл только смену версии внутри одной ветки.</p>
+        <p>У каждой ветки свой счётчик. Номера Public и Staging — <b>не одно и то же число в разных местах</b>, а разные ветки с независимой нумерацией. Сравнивать имеет смысл только смену версии внутри одной ветки.</p>
+      </details>
+      <details class="faq-item">
+        <summary>Что делает кнопка «Перезагрузить данные»?</summary>
+        <p>Она перечитывает файлы, которые уже опубликованы на GitHub Pages. Кнопка не запускает новый GitHub Actions workflow. Сборщик автоматически проверяет источники примерно каждые 15 минут, но расписание GitHub может задерживаться.</p>
       </details>
       <details class="faq-item">
         <summary>Откуда данные и как часто обновляются?</summary>
@@ -818,7 +822,13 @@ function escapeHtml(value) {
 }
 
 function formatDate(value) {
-  const date = new Date(value);
+  let date;
+  if (typeof value === 'string' && /^\\d{4}-\\d{2}-\\d{2}$/.test(value)) {
+    const parts = value.split('-').map(Number);
+    date = new Date(parts[0], parts[1] - 1, parts[2], 12);
+  } else {
+    date = new Date(value);
+  }
   if (!Number.isFinite(date.getTime())) return 'дата неизвестна';
   return new Intl.DateTimeFormat('ru-RU', { dateStyle: 'long' }).format(date);
 }
@@ -1054,7 +1064,7 @@ function renderData(data, history) {
 
   const latestPatch = data.latestPatch || {};
   const patchVersion = latestPatch.version || data.currentVersion;
-  const patchDate = latestPatch.timestamp || data.currentDate;
+  const patchDate = latestPatch.date || data.currentDate || latestPatch.timestamp;
   $('latest-patch').textContent = patchVersion ? 'v' + patchVersion : '—';
 
   const days = Number(data.daysSince);
