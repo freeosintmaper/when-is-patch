@@ -88,6 +88,53 @@ function writeJsonAtomically(path, value) {
   fs.writeFileSync(temporaryPath, JSON.stringify(value, null, 2) + '\n', 'utf8');
 }
 
+function publishJsonFiles(files) {
+  const paths = Object.keys(files);
+  const backups = new Set();
+  const installed = new Set();
+
+  try {
+    paths.forEach(function (path) {
+      writeJsonAtomically(path, files[path]);
+    });
+
+    paths.forEach(function (path) {
+      const backupPath = path + '.bak';
+      if (fs.existsSync(path)) {
+        if (fs.existsSync(backupPath)) fs.unlinkSync(backupPath);
+        fs.renameSync(path, backupPath);
+        backups.add(path);
+      }
+    });
+
+    paths.forEach(function (path) {
+      fs.renameSync(path + '.tmp', path);
+      installed.add(path);
+    });
+  } catch (error) {
+    paths.forEach(function (path) {
+      try {
+        if (installed.has(path) && fs.existsSync(path)) fs.unlinkSync(path);
+        const backupPath = path + '.bak';
+        if (backups.has(path) && fs.existsSync(backupPath)) {
+          fs.renameSync(backupPath, path);
+        }
+      } catch (rollbackError) {
+        console.error('Не удалось полностью откатить ' + path + ': ' + rollbackError.message);
+      }
+    });
+    throw error;
+  } finally {
+    paths.forEach(function (path) {
+      try { if (fs.existsSync(path + '.tmp')) fs.unlinkSync(path + '.tmp'); } catch (_) {}
+    });
+  }
+
+  paths.forEach(function (path) {
+    try { if (fs.existsSync(path + '.bak')) fs.unlinkSync(path + '.bak'); } catch (_) {}
+  });
+}
+
 async function main() {
   const now = new Date();
   const nowIso = now.toISOString();
@@ -275,13 +322,11 @@ async function main() {
     sourcesCheckedAt: nowIso
   };
 
-  // Сначала полностью записываем оба временных файла. Если подготовка
-  // любого из них не удалась, рабочие JSON-файлы остаются нетронутыми.
-  writeJsonAtomically('history.json', trimmedHistory);
-  writeJsonAtomically('data.json', output);
-
-  fs.renameSync('history.json.tmp', 'history.json');
-  fs.renameSync('data.json.tmp', 'data.json');
+  // Оба JSON-файла устанавливаются вместе с резервными копиями и откатом при ошибке.
+  publishJsonFiles({
+    'history.json': trimmedHistory,
+    'data.json': output
+  });
 
   console.log('✅ Данные проверены и сохранены.');
   console.log(JSON.stringify(output, null, 2));
