@@ -6,6 +6,9 @@
 <meta name="description" content="Версия Dota 2 сегодня: Public, Staging, Experimental и признаки скорого патча. Обновляется автоматически из официальных данных Valve.">
 <meta name="keywords" content="версия dota 2, когда патч dota 2, staging dota 2, обновление dota 2, трекер патчей">
 <meta name="theme-color" content="#0a0a12">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Когда патч? — Версии Dota 2 и активность веток">
+<meta property="og:description" content="Мониторинг Public, Staging и Experimental. История изменений и осторожная оценка активности перед обновлениями.">
 <title>Когда патч? — Версия Dota 2 сегодня</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -490,6 +493,123 @@
     text-align: center;
   }
 
+
+  /* Dashboard tools and freshness */
+  .actions-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: -1.7rem 0 1.25rem;
+    padding: 0.8rem 0.95rem;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: rgba(20, 20, 32, 0.55);
+  }
+  .actions-note { color: var(--text-dim); font-size: 0.74rem; line-height: 1.45; max-width: 390px; }
+  .action-buttons { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .action-button {
+    appearance: none;
+    border: 1px solid var(--border-hover);
+    border-radius: 9px;
+    padding: 0.58rem 0.82rem;
+    color: var(--text);
+    background: rgba(240, 178, 50, 0.08);
+    font: 600 0.76rem 'Inter', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
+  .action-button:hover:not(:disabled) { background: rgba(240, 178, 50, 0.16); transform: translateY(-1px); }
+  .action-button:disabled { opacity: 0.55; cursor: wait; }
+  .action-button:focus-visible, .history-input:focus-visible, .history-select:focus-visible {
+    outline: 2px solid var(--gold-light);
+    outline-offset: 3px;
+  }
+
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin: 0 0 1.25rem;
+    animation: fadeUp 0.7s ease-out 0.15s backwards;
+  }
+  .metric-card {
+    min-width: 0;
+    padding: 1.05rem 1.15rem;
+    border: 1px solid var(--border);
+    border-radius: 15px;
+    background: var(--bg-card);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+  .metric-label {
+    display: block;
+    margin-bottom: 0.45rem;
+    color: var(--text-dim);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+  }
+  .metric-value {
+    display: block;
+    color: var(--text);
+    font: 700 1.45rem 'Rajdhani', sans-serif;
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+  }
+  .metric-note { display: block; margin-top: 0.35rem; color: var(--text-dimmer); font-size: 0.74rem; line-height: 1.45; }
+  #data-health[data-freshness="fresh"] { border-color: rgba(74, 222, 128, 0.28); }
+  #data-health[data-freshness="delayed"] { border-color: rgba(240, 178, 50, 0.35); }
+  #data-health[data-freshness="stale"], #data-health[data-freshness="error"] { border-color: rgba(231, 76, 60, 0.38); }
+  #data-health[data-freshness="fresh"] .metric-value { color: var(--green); }
+  #data-health[data-freshness="delayed"] .metric-value { color: var(--gold-light); }
+  #data-health[data-freshness="stale"] .metric-value,
+  #data-health[data-freshness="error"] .metric-value { color: #ff8b7d; }
+
+  .history-tools {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 190px;
+    gap: 0.6rem;
+    margin: 0 0 0.65rem;
+  }
+  .history-input, .history-select {
+    width: 100%;
+    min-width: 0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.7rem 0.85rem;
+    color: var(--text);
+    background: rgba(20, 20, 32, 0.82);
+    font: 400 0.8rem 'Inter', sans-serif;
+  }
+  .history-input::placeholder { color: var(--text-dimmer); }
+  .history-select option { color: var(--text); background: #141420; }
+  .history-count { margin: 0 0 0.7rem 0.25rem; color: var(--text-dimmer); font-size: 0.72rem; }
+  .history-more-wrap { display: flex; justify-content: center; margin-top: 0.8rem; }
+  .history-more-wrap[hidden] { display: none; }
+  .history-more { min-width: 160px; }
+  .actions-note[aria-live], #refresh-note { min-height: 1.2em; }
+
+  @media (max-width: 620px) {
+    .actions-bar { align-items: stretch; flex-direction: column; margin-top: -1.45rem; }
+    .actions-note { max-width: none; }
+    .action-buttons { display: grid; grid-template-columns: 1fr 1fr; }
+    .action-button { min-height: 40px; }
+    .metrics-grid { grid-template-columns: 1fr; gap: 0.55rem; }
+    .metric-card { padding: 0.9rem 1rem; }
+    .history-tools { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      scroll-behavior: auto !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
   /* FOOTER */
   .footer {
     text-align: center;
@@ -542,7 +662,7 @@
 
       <div class="kicker">
         <span class="live-dot"></span>
-        Трекер версий Dota 2 · автообновление
+        Мониторинг веток · обновление каждые 15 минут
       </div>
 
       <h1>
@@ -554,6 +674,17 @@
         <span id="hero-date"></span>
       </p>
     </header>
+
+
+    <div class="actions-bar">
+      <p class="actions-note" id="refresh-note" aria-live="polite">
+        Снимок перечитывается по кнопке. Автоматический сбор данных запускается примерно каждые 15 минут.
+      </p>
+      <div class="action-buttons">
+        <button class="action-button" id="refresh-button" type="button">Перезагрузить данные</button>
+        <button class="action-button" id="copy-button" type="button">Скопировать сводку</button>
+      </div>
+    </div>
 
     <!-- Три ветки -->
     <section class="trio" id="trio">
@@ -574,9 +705,23 @@
       </article>
     </section>
 
+
+    <section class="metrics-grid" aria-label="Сводка по обновлениям">
+      <article class="metric-card">
+        <span class="metric-label">Последний официальный патч</span>
+        <strong class="metric-value" id="latest-patch">—</strong>
+        <span class="metric-note" id="latest-patch-date">Загружаем дату выхода…</span>
+      </article>
+      <article class="metric-card" id="data-health" data-freshness="unknown" aria-live="polite">
+        <span class="metric-label">Актуальность данных</span>
+        <strong class="metric-value" id="freshness-title">Проверяем…</strong>
+        <span class="metric-note" id="freshness-detail">Ожидаем снимок от GitHub Actions</span>
+      </article>
+    </section>
+
     <!-- Вердикт -->
     <section class="verdict-card" id="verdict" data-level="quiet">
-      <div class="verdict-label">Прогноз обновления</div>
+      <div class="verdict-label">Оценка активности · не дата патча</div>
       <div class="verdict-title" id="verdict-title">Считаем…</div>
       <div class="verdict-text" id="verdict-text">Загружаем данные о патчах</div>
     </section>
@@ -603,9 +748,21 @@
       <div class="section-head">
         <div class="section-title">Хронология смен</div>
       </div>
-      <div id="feed">
+
+      <div class="history-tools">
+        <input class="history-input" id="history-search" type="search" placeholder="Поиск по версии или ветке…" aria-label="Поиск по истории версий">
+        <select class="history-select" id="history-branch" aria-label="Фильтр по ветке">
+          <option value="all">Все ветки</option>
+          <option value="Public">Public</option>
+          <option value="Staging">Staging</option>
+          <option value="Experimental">Experimental</option>
+        </select>
+      </div>
+      <div class="history-count" id="history-count" aria-live="polite"></div>
+      <div id="feed" aria-live="polite">
         <div class="feed-empty">Загружаем историю…</div>
       </div>
+      <div class="history-more-wrap"><button class="action-button history-more" id="history-more" type="button" hidden>Показать ещё</button></div>
     </section>
 
     <!-- FAQ -->
@@ -619,7 +776,7 @@
       </details>
       <details class="faq-item">
         <summary>Что такое Staging и Experimental?</summary>
-        <p>Это <b>закрытые служебные ветки</b> Valve. Staging — «окно выдачи»: сюда Valve кладёт сборки незадолго до релиза. Experimental — «мастерская»: меняется почти каждый день. Обе видны только по номеру версии через публичные данные Steam.</p>
+        <p>Это <b>служебные ветки</b> Valve. Их активность видна по публичным данным о версиях, но сама по себе не доказывает подготовку релиза. Staging и Experimental — косвенные индикаторы, а не расписание обновлений.</p>
       </details>
       <details class="faq-item">
         <summary>Почему я вижу разные номера Public и Staging?</summary>
@@ -638,162 +795,409 @@
   </div>
 
 <script>
-Promise.all([
-  fetch('data.json?v=' + Date.now()).then(r => r.json()).catch(() => null),
-  fetch('history.json?v=' + Date.now()).then(r => r.json()).catch(() => [])
-]).then(([data, history]) => {
-  if (!data || typeof data !== 'object') {
-    document.getElementById('verdict-title').textContent = 'Нет данных';
-    document.getElementById('verdict-text').textContent = 'Файл data.json ещё не создан. Запусти workflow.';
-    return;
-  }
+'use strict';
 
-  const versions = data.versions || {};
+const appState = {
+  data: null,
+  history: [],
+  branchFilter: 'all',
+  search: '',
+  visibleCount: 20,
+  loading: false
+};
 
-  // ─── Hero ───
-  document.getElementById('hero-public').textContent = versions.Public || '—';
-  document.getElementById('hero-pub').textContent = versions.Public || '—';
-  document.getElementById('hero-stg').textContent = versions.Staging || '—';
-  document.getElementById('hero-exp').textContent = versions.Experimental || '—';
+const $ = (id) => document.getElementById(id);
 
-  if (data.updatedAt) {
-    const u = new Date(data.updatedAt);
-    document.getElementById('hero-date').innerHTML =
-      '<br><span style="font-size:0.85em;opacity:0.7;">Проверено ' +
-      u.toLocaleString('ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }) +
-      ' МСК</span>';
-  }
-
-  // ─── Три ветки ───
-  document.getElementById('v-public').textContent = versions.Public || '—';
-  document.getElementById('v-staging').textContent = versions.Staging || '—';
-  document.getElementById('v-experimental').textContent = versions.Experimental || '—';
-
-  // ─── Сигналы ───
-  const sigs = Array.isArray(data.signals) ? data.signals : [];
-  document.getElementById('signals').innerHTML = sigs.map(s => `
-    <div class="signal" data-status="${s.status || 'calm'}">
-      <div class="signal-dot"></div>
-      <div class="signal-info">
-        <div class="signal-label">${escapeHtml(s.label || '')}</div>
-        <div class="signal-note">${escapeHtml(s.note || '')}</div>
-      </div>
-      <div class="signal-value">${escapeHtml(String(s.value ?? '—'))}</div>
-    </div>
-  `).join('');
-
-  // ─── Вердикт ───
-  const waiting = data.waitingSignals || 0;
-  const total = sigs.length || 3;
-  let level, title, text;
-  if (waiting === 0) {
-    level = 'quiet';
-    title = 'Пока тихо';
-    text = 'Все сигналы в пределах обычного. Оснований ждать патч прямо сейчас — нет.';
-  } else if (waiting === 1) {
-    level = 'warn';
-    title = 'Есть сигнал';
-    text = 'Один признак выбивается из обычного ритма. Возможны новости в ближайшие дни — но это не гарантия.';
-  } else if (waiting === 2) {
-    level = 'warn';
-    title = 'Похоже, патч близко';
-    text = `${waiting} из ${total} сигналов указывают на скорое обновление. Следи за официальными новостями Valve.`;
-  } else {
-    level = 'hot';
-    title = 'Скоро патч';
-    text = `Все ${total} сигнала указывают на скорое обновление. Ждём анонс в любой момент.`;
-  }
-  const v = document.getElementById('verdict');
-  v.dataset.level = level;
-  document.getElementById('verdict-title').textContent = title;
-  document.getElementById('verdict-text').textContent = text;
-
-  // ─── Хронология ───
-  renderFeed(history);
-
-  // ─── Footer updated ───
-  if (data.updatedAt) {
-    const u = new Date(data.updatedAt);
-    document.getElementById('updated').textContent =
-      'Последнее обновление данных: ' +
-      u.toLocaleString('ru-RU', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' });
-  }
-
-}).catch(err => {
-  console.error(err);
-  document.getElementById('verdict-title').textContent = 'Ошибка загрузки';
-  document.getElementById('verdict-text').textContent = 'Не удалось прочитать data.json или history.json.';
-});
-
-// ─── Рендер хронологии: последние ~20 смен ───
-function renderFeed(history) {
-  const container = document.getElementById('feed');
-  if (!Array.isArray(history) || history.length === 0) {
-    container.innerHTML = '<div class="feed-empty">История пока пуста — смены появятся после первых запусков.</div>';
-    return;
-  }
-
-  // Сортируем по времени (сначала новые)
-  const sorted = [...history]
-    .filter(e => e && e.branch && e.version && e.timestamp)
-    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-    .slice(0, 20);
-
-  if (sorted.length === 0) {
-    container.innerHTML = '<div class="feed-empty">Нет корректных записей истории.</div>';
-    return;
-  }
-
-  // Группируем по дням
-  const groups = {};
-  for (const e of sorted) {
-    const d = new Date(e.timestamp);
-    const key = d.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long' });
-    if (!groups[key]) groups[key] = [];
-    groups[key].push({ ...e, _date: d });
-  }
-
-  let html = '';
-  for (const [day, items] of Object.entries(groups)) {
-    html += `<div class="feed-day">${escapeHtml(day)}</div>`;
-    html += '<ol class="feed-list">';
-    for (const e of items) {
-      const time = e._date.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-      const prev = findPrevious(history, e);
-      const verHtml = prev
-        ? `${escapeHtml(String(prev))} → <b>${escapeHtml(String(e.version))}</b>`
-        : `<b>${escapeHtml(String(e.version))}</b>`;
-      html += `
-        <li class="feed-row" data-branch="${escapeHtml(e.branch)}">
-          <span class="feed-time">${time}</span>
-          <span class="feed-dot"></span>
-          <span class="feed-name">${escapeHtml(e.branch)}</span>
-          <span class="feed-ver">${verHtml}</span>
-        </li>`;
-    }
-    html += '</ol>';
-  }
-  container.innerHTML = html;
-}
-
-// Ищем предыдущую версию той же ветки
-function findPrevious(history, entry) {
-  const same = history
-    .filter(h => h && h.branch === entry.branch && h.timestamp)
-    .sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-  const idx = same.findIndex(h => h.timestamp === entry.timestamp && String(h.version) === String(entry.version));
-  if (idx > 0) return same[idx - 1].version;
-  return null;
-}
-
-function escapeHtml(str) {
-  return String(str)
+function escapeHtml(value) {
+  return String(value)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
 }
+
+function formatDate(value) {
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return 'дата неизвестна';
+  return new Intl.DateTimeFormat('ru-RU', { dateStyle: 'long' }).format(date);
+}
+
+function formatDateTime(value) {
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return 'время неизвестно';
+  const localTime = new Intl.DateTimeFormat('ru-RU', {
+    dateStyle: 'long',
+    timeStyle: 'short'
+  }).format(date);
+  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  return localTime + (timeZone ? ' · ' + timeZone : ' · местное время');
+}
+
+function relativeAge(value) {
+  const timestamp = Date.parse(value);
+  if (!Number.isFinite(timestamp)) return 'время проверки неизвестно';
+  const minutes = Math.max(0, Math.floor((Date.now() - timestamp) / 60000));
+  if (minutes < 1) return 'только что';
+  if (minutes < 60) return minutes + ' мин. назад';
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return hours + ' ч. назад';
+  const days = Math.floor(hours / 24);
+  return days + ' дн. назад';
+}
+
+function updateFreshness(data, error) {
+  const card = $('data-health');
+  const title = $('freshness-title');
+  const detail = $('freshness-detail');
+
+  if (error) {
+    card.dataset.freshness = 'error';
+    title.textContent = 'Нет новой проверки';
+    detail.textContent = appState.data
+      ? 'Показываем последний загруженный снимок. ' + error
+      : error;
+    return;
+  }
+
+  const updatedAt = data && data.updatedAt;
+  const timestamp = Date.parse(updatedAt);
+  if (!Number.isFinite(timestamp)) {
+    card.dataset.freshness = 'unknown';
+    title.textContent = 'Нет отметки времени';
+    detail.textContent = 'Источник не передал время последней успешной проверки.';
+    return;
+  }
+
+  const ageMinutes = Math.max(0, (Date.now() - timestamp) / 60000);
+  if (ageMinutes <= 35) {
+    card.dataset.freshness = 'fresh';
+    title.textContent = 'Актуально';
+  } else if (ageMinutes <= 90) {
+    card.dataset.freshness = 'delayed';
+    title.textContent = 'Есть задержка';
+  } else {
+    card.dataset.freshness = 'stale';
+    title.textContent = 'Данные устарели';
+  }
+
+  detail.textContent = 'Снимок обновлён ' + relativeAge(updatedAt) +
+    ' · ' + formatDateTime(updatedAt) +
+    '. GitHub Actions запускает сборщик примерно раз в 15 минут.';
+}
+
+function renderSignals(signals) {
+  const container = $('signals');
+  if (!Array.isArray(signals) || signals.length === 0) {
+    container.innerHTML = '<div class="feed-empty">Сигналы пока недоступны.</div>';
+    return;
+  }
+
+  container.innerHTML = signals.map(function (signal) {
+    const status = signal.status === 'wait' ? 'wait' : 'calm';
+    return '<div class="signal" data-status="' + status + '">' +
+      '<div class="signal-dot" aria-hidden="true"></div>' +
+      '<div class="signal-info">' +
+        '<div class="signal-label">' + escapeHtml(signal.label || '') + '</div>' +
+        '<div class="signal-note">' + escapeHtml(signal.note || '') + '</div>' +
+      '</div>' +
+      '<div class="signal-value">' + escapeHtml(signal.value == null ? '—' : signal.value) + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderVerdict(data, signals) {
+  const waitingFromSignals = signals.filter(function (signal) {
+    return signal.status === 'wait';
+  }).length;
+  const rawWaiting = Number(data.waitingSignals);
+  const waiting = Number.isFinite(rawWaiting) ? Math.max(0, rawWaiting) : waitingFromSignals;
+  const total = signals.length || 3;
+  let level = 'quiet';
+  let title = 'Пока тихо';
+  let description = 'Наблюдаемые индикаторы сейчас находятся в обычном диапазоне.';
+
+  if (waiting === 1) {
+    level = 'warn';
+    title = 'Есть сигнал';
+    description = 'Один показатель вышел за обычный диапазон. Это повод наблюдать за изменениями, но не подтверждение скорого патча.';
+  } else if (waiting === 2) {
+    level = 'warn';
+    title = 'Активность выше обычной';
+    description = 'Два показателя требуют внимания. Подобная активность не позволяет вычислить дату выхода обновления.';
+  } else if (waiting >= 3) {
+    level = 'hot';
+    title = 'Высокая активность';
+    description = 'Все ' + total + ' индикатора отмечены как активные. Это сигнал для наблюдения, а не обещание патча в ближайшие часы.';
+  }
+
+  $('verdict').dataset.level = level;
+  $('verdict-title').textContent = title;
+  $('verdict-text').textContent = description +
+    ' Valve может выпустить обновление без предварительных признаков.';
+}
+
+function prepareHistory(history) {
+  const valid = (Array.isArray(history) ? history : []).map(function (item) {
+    if (!item || !item.branch || item.version == null || !item.timestamp) return null;
+    const timestamp = Date.parse(item.timestamp);
+    if (!Number.isFinite(timestamp)) return null;
+    return Object.assign({}, item, { _date: new Date(timestamp), _timestamp: timestamp });
+  }).filter(Boolean);
+
+  const byBranch = new Map();
+  valid.forEach(function (entry) {
+    if (!byBranch.has(entry.branch)) byBranch.set(entry.branch, []);
+    byBranch.get(entry.branch).push(entry);
+  });
+
+  const previousVersion = new Map();
+  byBranch.forEach(function (entries) {
+    entries.sort(function (a, b) { return a._timestamp - b._timestamp; });
+    entries.forEach(function (entry, index) {
+      previousVersion.set(entry, index > 0 ? entries[index - 1].version : null);
+    });
+  });
+
+  return { entries: valid, previousVersion: previousVersion };
+}
+
+function renderFeed() {
+  const container = $('feed');
+  const prepared = prepareHistory(appState.history);
+  let filtered = prepared.entries;
+
+  if (appState.branchFilter !== 'all') {
+    filtered = filtered.filter(function (entry) {
+      return entry.branch === appState.branchFilter;
+    });
+  }
+
+  if (appState.search) {
+    const query = appState.search.toLocaleLowerCase('ru-RU');
+    filtered = filtered.filter(function (entry) {
+      const previous = prepared.previousVersion.get(entry);
+      const haystack = [entry.branch, entry.version, previous || ''].join(' ').toLocaleLowerCase('ru-RU');
+      return haystack.includes(query);
+    });
+  }
+
+  filtered.sort(function (a, b) { return b._timestamp - a._timestamp; });
+  $('history-count').textContent = 'Найдено записей: ' + filtered.length +
+    (appState.branchFilter === 'all' ? '' : ' · ' + appState.branchFilter);
+
+  const visible = filtered.slice(0, appState.visibleCount);
+  const moreButton = $('history-more');
+  const remaining = Math.max(0, filtered.length - visible.length);
+  moreButton.hidden = remaining === 0;
+  moreButton.textContent = 'Показать ещё ' + Math.min(20, remaining);
+
+  if (!visible.length) {
+    container.innerHTML = '<div class="feed-empty">' +
+      (prepared.entries.length ? 'По выбранным условиям ничего не найдено.' : 'История пока пуста.') +
+    '</div>';
+    return;
+  }
+
+  const groups = new Map();
+  visible.forEach(function (entry) {
+    const day = new Intl.DateTimeFormat('ru-RU', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    }).format(entry._date);
+    if (!groups.has(day)) groups.set(day, []);
+    groups.get(day).push(entry);
+  });
+
+  let output = '';
+  groups.forEach(function (entries, day) {
+    output += '<div class="feed-day">' + escapeHtml(day) + '</div><ol class="feed-list">';
+    entries.forEach(function (entry) {
+      const time = entry._date.toLocaleTimeString('ru-RU', {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+      const previous = prepared.previousVersion.get(entry);
+      const versionText = previous == null
+        ? '<b>' + escapeHtml(entry.version) + '</b>'
+        : escapeHtml(previous) + ' → <b>' + escapeHtml(entry.version) + '</b>';
+
+      output += '<li class="feed-row" data-branch="' + escapeHtml(entry.branch) + '">' +
+        '<span class="feed-time">' + escapeHtml(time) + '</span>' +
+        '<span class="feed-dot" aria-hidden="true"></span>' +
+        '<span class="feed-name">' + escapeHtml(entry.branch) + '</span>' +
+        '<span class="feed-ver">' + versionText + '</span>' +
+      '</li>';
+    });
+    output += '</ol>';
+  });
+
+  container.innerHTML = output;
+}
+
+function renderData(data, history) {
+  const versions = data.versions || {};
+  $('hero-public').textContent = versions.Public || '—';
+  $('hero-pub').textContent = versions.Public || '—';
+  $('hero-stg').textContent = versions.Staging || '—';
+  $('hero-exp').textContent = versions.Experimental || '—';
+
+  $('hero-date').textContent = data.updatedAt
+    ? '\nПроверено ' + formatDateTime(data.updatedAt)
+    : '';
+
+  $('v-public').textContent = versions.Public || '—';
+  $('v-staging').textContent = versions.Staging || '—';
+  $('v-experimental').textContent = versions.Experimental || '—';
+
+  const latestPatch = data.latestPatch || {};
+  const patchVersion = latestPatch.version || data.currentVersion;
+  const patchDate = latestPatch.timestamp || data.currentDate;
+  $('latest-patch').textContent = patchVersion ? 'v' + patchVersion : '—';
+
+  const days = Number(data.daysSince);
+  const daysText = Number.isFinite(days) ? ' · прошло ' + days + ' дн.' : '';
+  $('latest-patch-date').textContent = patchDate
+    ? 'Вышел ' + formatDate(patchDate) + daysText
+    : 'Дата выхода не указана';
+
+  const signals = Array.isArray(data.signals) ? data.signals : [];
+  renderSignals(signals);
+  renderVerdict(data, signals);
+
+  appState.history = Array.isArray(history) ? history : [];
+  renderFeed();
+  updateFreshness(data, null);
+
+  $('updated').textContent = data.updatedAt
+    ? 'Последнее успешное обновление источников: ' + formatDateTime(data.updatedAt)
+    : 'Время последнего обновления не указано';
+}
+
+async function loadData(manual) {
+  if (appState.loading) return;
+  appState.loading = true;
+
+  const button = $('refresh-button');
+  const note = $('refresh-note');
+  if (manual) {
+    button.disabled = true;
+    button.textContent = 'Загружаем…';
+    note.textContent = 'Перечитываем опубликованные JSON-файлы…';
+  }
+
+  try {
+    const version = Date.now();
+    const responses = await Promise.all([
+      fetch('data.json?v=' + version, { cache: 'no-store' }),
+      fetch('history.json?v=' + version, { cache: 'no-store' })
+    ]);
+
+    if (!responses[0].ok) throw new Error('data.json: HTTP ' + responses[0].status);
+    if (!responses[1].ok) throw new Error('history.json: HTTP ' + responses[1].status);
+
+    const results = await Promise.all([responses[0].json(), responses[1].json()]);
+    const data = results[0];
+    const history = results[1];
+
+    if (!data || typeof data !== 'object' || !data.versions) {
+      throw new Error('Получен неполный снимок данных.');
+    }
+
+    appState.data = data;
+    renderData(data, history);
+    if (manual) {
+      note.textContent = 'Опубликованные данные успешно перечитаны. Последняя проверка источников: ' +
+        (data.updatedAt ? formatDateTime(data.updatedAt) : 'время неизвестно') + '.';
+    }
+  } catch (error) {
+    console.error(error);
+    if (appState.data) {
+      updateFreshness(appState.data, 'Не удалось получить свежий файл: ' + error.message);
+    } else {
+      $('verdict-title').textContent = 'Не удалось загрузить данные';
+      $('verdict-text').textContent = 'Проверьте соединение или попробуйте ещё раз. Последний опубликованный снимок пока недоступен.';
+      $('feed').innerHTML = '<div class="feed-empty">История временно недоступна.</div>';
+      updateFreshness(null, error.message);
+    }
+    if (manual) note.textContent = 'Не удалось перечитать файлы. Отображаем последний успешно загруженный снимок, если он есть.';
+  } finally {
+    appState.loading = false;
+    button.disabled = false;
+    button.textContent = 'Перезагрузить данные';
+  }
+}
+
+async function copySummary() {
+  const button = $('copy-button');
+  if (!appState.data) {
+    $('refresh-note').textContent = 'Сначала загрузите данные, затем можно скопировать сводку.';
+    return;
+  }
+
+  const data = appState.data;
+  const versions = data.versions || {};
+  const patch = data.latestPatch || {};
+  const lines = [
+    'Когда патч? — мониторинг версий Dota 2',
+    'Последняя проверка: ' + (data.updatedAt ? formatDateTime(data.updatedAt) : 'неизвестно'),
+    'Public: ' + (versions.Public || '—'),
+    'Staging: ' + (versions.Staging || '—'),
+    'Experimental: ' + (versions.Experimental || '—'),
+    'Последний официальный патч: ' + (patch.version || data.currentVersion || '—'),
+    'Дата патча: ' + (patch.timestamp ? formatDate(patch.timestamp) : (data.currentDate || '—')),
+    'Пауза после патча: ' + (data.daysSince == null ? '—' : data.daysSince + ' дн.'),
+    '',
+    'Сигналы показывают активность веток и не предсказывают точную дату выхода обновления.',
+    'https://freeosintmaper.github.io/when-is-patch/'
+  ];
+  const text = lines.join('\n');
+
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.select();
+      const copied = document.execCommand('copy');
+      textarea.remove();
+      if (!copied) throw new Error('Браузер запретил копирование');
+    }
+
+    button.textContent = 'Скопировано';
+    $('refresh-note').textContent = 'Сводка скопирована в буфер обмена.';
+    window.setTimeout(function () { button.textContent = 'Скопировать сводку'; }, 1800);
+  } catch (error) {
+    console.error(error);
+    $('refresh-note').textContent = 'Не удалось скопировать автоматически. Попробуйте другой браузер.';
+  }
+}
+
+$('refresh-button').addEventListener('click', function () { loadData(true); });
+$('copy-button').addEventListener('click', copySummary);
+$('history-search').addEventListener('input', function (event) {
+  appState.search = event.target.value.trim();
+  appState.visibleCount = 20;
+  renderFeed();
+});
+$('history-branch').addEventListener('change', function (event) {
+  appState.branchFilter = event.target.value;
+  appState.visibleCount = 20;
+  renderFeed();
+});
+$('history-more').addEventListener('click', function () {
+  appState.visibleCount += 20;
+  renderFeed();
+});
+
+loadData(false);
 </script>
 </body>
 </html>
