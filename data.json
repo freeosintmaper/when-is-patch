@@ -1,37 +1,43 @@
 {
+  "dataFormatVersion": 2,
   "currentVersion": "7.41f",
   "currentDate": "2026-09-15",
+  "latestPatch": {
+    "version": "7.41f",
+    "timestamp": "2026-09-15T07:00:00.000Z"
+  },
   "daysSince": 49,
   "medianPause": 27,
   "versions": {
-    "Public": "6970",
+    "Public": "6971",
     "Staging": "3332",
-    "Experimental": "7490"
+    "Experimental": "7492"
   },
   "signals": [
     {
       "key": "staging",
       "label": "Staging",
       "value": "v3332",
-      "note": "История только собирается — нужно пару дней наблюдений",
+      "note": "История только собирается — нужно больше наблюдений",
       "status": "calm"
     },
     {
       "key": "pause",
       "label": "Пауза после патча",
       "value": "49 дн.",
-      "note": "Дольше обычных 27 дн.",
+      "note": "Дольше медианного интервала (27 дн.)",
       "status": "wait"
     },
     {
       "key": "experimental",
       "label": "Experimental",
-      "value": "v7490",
-      "note": "11 смен за 7 дн. — обычный фон",
+      "value": "v7492",
+      "note": "11 смен за 7 дн. — справочный показатель",
       "status": "calm"
     }
   ],
   "waitingSignals": 1,
-  "historySize": 45,
-  "updatedAt": "2026-11-03T15:32:21.175Z"
+  "historySize": 47,
+  "updatedAt": "2026-11-03T21:14:49.585Z",
+  "sourcesCheckedAt": "2026-11-03T21:14:49.585Z"
 }
