@@ -937,14 +937,10 @@ function renderVerdict(data, signals) {
     level = 'warn';
     title = 'Есть сигнал';
     description = 'Один показатель вышел за обычный диапазон. Это повод наблюдать за изменениями, но не подтверждение скорого патча.';
-  } else if (waiting === 2) {
+  } else if (waiting >= 2) {
     level = 'warn';
     title = 'Активность выше обычной';
-    description = 'Два показателя требуют внимания. Подобная активность не позволяет вычислить дату выхода обновления.';
-  } else if (waiting >= 3) {
-    level = 'hot';
-    title = 'Высокая активность';
-    description = 'Все ' + total + ' индикатора отмечены как активные. Это сигнал для наблюдения, а не обещание патча в ближайшие часы.';
+    description = waiting + ' показателя требуют внимания. Подобная активность не позволяет вычислить дату выхода обновления.';
   }
 
   $('verdict').dataset.level = level;
@@ -1006,6 +1002,7 @@ function renderFeed() {
   const moreButton = $('history-more');
   const remaining = Math.max(0, filtered.length - visible.length);
   moreButton.hidden = remaining === 0;
+  moreButton.parentElement.hidden = remaining === 0;
   moreButton.textContent = 'Показать ещё ' + Math.min(20, remaining);
 
   if (!visible.length) {
