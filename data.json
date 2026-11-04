@@ -32,12 +32,12 @@
       "key": "experimental",
       "label": "Experimental",
       "value": "v7493",
-      "note": "12 смен за 7 дн. — справочный показатель",
+      "note": "11 смен за 7 дн. — справочный показатель",
       "status": "calm"
     }
   ],
   "waitingSignals": 1,
   "historySize": 48,
-  "updatedAt": "2026-11-04T15:44:35.401Z",
-  "sourcesCheckedAt": "2026-11-04T15:44:35.401Z"
+  "updatedAt": "2026-11-04T21:30:17.910Z",
+  "sourcesCheckedAt": "2026-11-04T21:30:17.910Z"
 }
