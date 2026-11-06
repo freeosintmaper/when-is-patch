@@ -6,12 +6,12 @@
     "version": "7.41f",
     "timestamp": "2026-09-15T07:00:00.000Z"
   },
-  "daysSince": 51,
+  "daysSince": 52,
   "medianPause": 27,
   "versions": {
     "Public": "6972",
     "Staging": "3332",
-    "Experimental": "7496"
+    "Experimental": "7497"
   },
   "signals": [
     {
@@ -24,20 +24,20 @@
     {
       "key": "pause",
       "label": "Пауза после патча",
-      "value": "51 дн.",
+      "value": "52 дн.",
       "note": "Дольше медианного интервала (27 дн.)",
       "status": "wait"
     },
     {
       "key": "experimental",
       "label": "Experimental",
-      "value": "v7496",
-      "note": "11 смен за 7 дн. — справочный показатель",
+      "value": "v7497",
+      "note": "12 смен за 7 дн. — справочный показатель",
       "status": "calm"
     }
   ],
   "waitingSignals": 1,
-  "historySize": 52,
-  "updatedAt": "2026-11-06T02:37:20.457Z",
-  "sourcesCheckedAt": "2026-11-06T02:37:20.457Z"
+  "historySize": 53,
+  "updatedAt": "2026-11-06T09:50:50.136Z",
+  "sourcesCheckedAt": "2026-11-06T09:50:50.136Z"
 }
