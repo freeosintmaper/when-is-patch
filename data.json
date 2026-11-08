@@ -11,7 +11,7 @@
   "versions": {
     "Public": "6972",
     "Staging": "3332",
-    "Experimental": "7502"
+    "Experimental": "7503"
   },
   "signals": [
     {
@@ -31,13 +31,13 @@
     {
       "key": "experimental",
       "label": "Experimental",
-      "value": "v7502",
-      "note": "10 смен за 7 дн. — справочный показатель",
+      "value": "v7503",
+      "note": "11 смен за 7 дн. — справочный показатель",
       "status": "calm"
     }
   ],
   "waitingSignals": 1,
-  "historySize": 56,
-  "updatedAt": "2026-11-08T14:39:54.320Z",
-  "sourcesCheckedAt": "2026-11-08T14:39:54.320Z"
+  "historySize": 57,
+  "updatedAt": "2026-11-08T19:07:06.866Z",
+  "sourcesCheckedAt": "2026-11-08T19:07:06.866Z"
 }
