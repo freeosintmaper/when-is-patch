@@ -9,17 +9,17 @@
   "daysSince": 55,
   "medianPause": 27,
   "versions": {
-    "Public": "6972",
-    "Staging": "3332",
-    "Experimental": "7504"
+    "Public": "6973",
+    "Staging": "3338",
+    "Experimental": "7505"
   },
   "signals": [
     {
       "key": "staging",
       "label": "Staging",
-      "value": "v3332",
-      "note": "История только собирается — нужно больше наблюдений",
-      "status": "calm"
+      "value": "v3338",
+      "note": "Менялся меньше часа назад",
+      "status": "wait"
     },
     {
       "key": "pause",
@@ -31,13 +31,13 @@
     {
       "key": "experimental",
       "label": "Experimental",
-      "value": "v7504",
-      "note": "12 смен за 7 дн. — справочный показатель",
+      "value": "v7505",
+      "note": "13 смен за 7 дн. — справочный показатель",
       "status": "calm"
     }
   ],
-  "waitingSignals": 1,
-  "historySize": 58,
-  "updatedAt": "2026-11-09T20:04:29.665Z",
-  "sourcesCheckedAt": "2026-11-09T20:04:29.665Z"
+  "waitingSignals": 2,
+  "historySize": 61,
+  "updatedAt": "2026-11-10T02:41:37.456Z",
+  "sourcesCheckedAt": "2026-11-10T02:41:37.456Z"
 }
