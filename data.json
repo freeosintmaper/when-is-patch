@@ -9,7 +9,7 @@
   "daysSince": 57,
   "medianPause": 27,
   "versions": {
-    "Public": "6973",
+    "Public": "6974",
     "Staging": "3348",
     "Experimental": "7505"
   },
@@ -18,7 +18,7 @@
       "key": "staging",
       "label": "Staging",
       "value": "v3348",
-      "note": "3 смены за сутки — повышенная активность",
+      "note": "Менялся 5 ч. назад",
       "status": "wait"
     },
     {
@@ -37,7 +37,7 @@
     }
   ],
   "waitingSignals": 2,
-  "historySize": 64,
-  "updatedAt": "2026-11-11T18:50:27.297Z",
-  "sourcesCheckedAt": "2026-11-11T18:50:27.297Z"
+  "historySize": 65,
+  "updatedAt": "2026-11-11T23:34:56.016Z",
+  "sourcesCheckedAt": "2026-11-11T23:34:56.016Z"
 }
