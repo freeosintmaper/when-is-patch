@@ -18,7 +18,7 @@
       "key": "staging",
       "label": "Staging",
       "value": "v3346",
-      "note": "Менялся 7 ч. назад",
+      "note": "Менялся 15 ч. назад",
       "status": "wait"
     },
     {
@@ -38,6 +38,6 @@
   ],
   "waitingSignals": 2,
   "historySize": 63,
-  "updatedAt": "2026-11-11T09:38:30.971Z",
-  "sourcesCheckedAt": "2026-11-11T09:38:30.971Z"
+  "updatedAt": "2026-11-11T17:26:44.811Z",
+  "sourcesCheckedAt": "2026-11-11T17:26:44.811Z"
 }
