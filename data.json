@@ -6,25 +6,25 @@
     "version": "7.41f",
     "timestamp": "2026-09-15T07:00:00.000Z"
   },
-  "daysSince": 58,
+  "daysSince": 59,
   "medianPause": 27,
   "versions": {
-    "Public": "6974",
-    "Staging": "3352",
+    "Public": "6975",
+    "Staging": "3353",
     "Experimental": "7505"
   },
   "signals": [
     {
       "key": "staging",
       "label": "Staging",
-      "value": "v3352",
+      "value": "v3353",
       "note": "3 смены за сутки — повышенная активность",
       "status": "wait"
     },
     {
       "key": "pause",
       "label": "Пауза после патча",
-      "value": "58 дн.",
+      "value": "59 дн.",
       "note": "Дольше медианного интервала (27 дн.)",
       "status": "wait"
     },
@@ -37,7 +37,7 @@
     }
   ],
   "waitingSignals": 2,
-  "historySize": 68,
-  "updatedAt": "2026-11-13T01:15:10.303Z",
-  "sourcesCheckedAt": "2026-11-13T01:15:10.303Z"
+  "historySize": 70,
+  "updatedAt": "2026-11-13T07:58:42.287Z",
+  "sourcesCheckedAt": "2026-11-13T07:58:42.287Z"
 }
