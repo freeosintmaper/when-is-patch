@@ -10,15 +10,15 @@
   "medianPause": 27,
   "versions": {
     "Public": "6974",
-    "Staging": "3351",
+    "Staging": "3352",
     "Experimental": "7505"
   },
   "signals": [
     {
       "key": "staging",
       "label": "Staging",
-      "value": "v3351",
-      "note": "Менялся меньше часа назад",
+      "value": "v3352",
+      "note": "3 смены за сутки — повышенная активность",
       "status": "wait"
     },
     {
@@ -32,12 +32,12 @@
       "key": "experimental",
       "label": "Experimental",
       "value": "v7505",
-      "note": "8 смен за 7 дн. — справочный показатель",
+      "note": "7 смен за 7 дн. — справочный показатель",
       "status": "calm"
     }
   ],
   "waitingSignals": 2,
-  "historySize": 67,
-  "updatedAt": "2026-11-12T20:25:10.534Z",
-  "sourcesCheckedAt": "2026-11-12T20:25:10.534Z"
+  "historySize": 68,
+  "updatedAt": "2026-11-13T01:15:10.303Z",
+  "sourcesCheckedAt": "2026-11-13T01:15:10.303Z"
 }
