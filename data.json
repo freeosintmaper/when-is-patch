@@ -18,7 +18,7 @@
       "key": "staging",
       "label": "Staging",
       "value": "v3359",
-      "note": "Менялся 13 ч. назад",
+      "note": "Менялся 18 ч. назад",
       "status": "wait"
     },
     {
@@ -32,12 +32,12 @@
       "key": "experimental",
       "label": "Experimental",
       "value": "v7505",
-      "note": "5 смен за 7 дн. — справочный показатель",
+      "note": "4 смен за 7 дн. — справочный показатель",
       "status": "calm"
     }
   ],
   "waitingSignals": 2,
   "historySize": 72,
-  "updatedAt": "2026-11-14T15:01:03.985Z",
-  "sourcesCheckedAt": "2026-11-14T15:01:03.985Z"
+  "updatedAt": "2026-11-14T19:53:43.015Z",
+  "sourcesCheckedAt": "2026-11-14T19:53:43.015Z"
 }
