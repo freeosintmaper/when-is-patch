@@ -1,15 +1,15 @@
 {
   "dataFormatVersion": 2,
-  "currentVersion": "7.41f",
-  "currentDate": "2026-09-15",
+  "currentVersion": "7.42",
+  "currentDate": "2026-11-18",
   "latestPatch": {
-    "version": "7.41f",
-    "timestamp": "2026-09-15T07:00:00.000Z"
+    "version": "7.42",
+    "timestamp": "2026-11-18T08:00:00.000Z"
   },
-  "daysSince": 64,
-  "medianPause": 27,
+  "daysSince": 0,
+  "medianPause": 28,
   "versions": {
-    "Public": "6976",
+    "Public": "6979",
     "Staging": "3370",
     "Experimental": "7505"
   },
@@ -18,15 +18,15 @@
       "key": "staging",
       "label": "Staging",
       "value": "v3370",
-      "note": "3 смены за сутки — повышенная активность",
+      "note": "Менялся 6 ч. назад",
       "status": "wait"
     },
     {
       "key": "pause",
       "label": "Пауза после патча",
-      "value": "64 дн.",
-      "note": "Дольше медианного интервала (27 дн.)",
-      "status": "wait"
+      "value": "0 дн.",
+      "note": "Медианный интервал — 28 дн.",
+      "status": "calm"
     },
     {
       "key": "experimental",
@@ -36,8 +36,8 @@
       "status": "calm"
     }
   ],
-  "waitingSignals": 2,
-  "historySize": 81,
-  "updatedAt": "2026-11-18T17:31:45.767Z",
-  "sourcesCheckedAt": "2026-11-18T17:31:45.767Z"
+  "waitingSignals": 1,
+  "historySize": 82,
+  "updatedAt": "2026-11-18T23:34:13.846Z",
+  "sourcesCheckedAt": "2026-11-18T23:34:13.846Z"
 }
