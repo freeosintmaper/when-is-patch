@@ -9,9 +9,9 @@
   "daysSince": 5,
   "medianPause": 28,
   "versions": {
-    "Public": "6989",
+    "Public": "6992",
     "Staging": "3370",
-    "Experimental": "7505"
+    "Experimental": "7508"
   },
   "signals": [
     {
@@ -31,13 +31,13 @@
     {
       "key": "experimental",
       "label": "Experimental",
-      "value": "v7505",
-      "note": "0 смен за 7 дн. — справочный показатель",
+      "value": "v7508",
+      "note": "1 смен за 7 дн. — справочный показатель",
       "status": "calm"
     }
   ],
   "waitingSignals": 1,
-  "historySize": 88,
-  "updatedAt": "2026-11-23T09:48:01.275Z",
-  "sourcesCheckedAt": "2026-11-23T09:48:01.275Z"
+  "historySize": 90,
+  "updatedAt": "2026-11-23T21:46:50.507Z",
+  "sourcesCheckedAt": "2026-11-23T21:46:50.507Z"
 }
