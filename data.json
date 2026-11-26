@@ -6,38 +6,38 @@
     "version": "7.42a",
     "timestamp": "2026-11-24T08:00:00.000Z"
   },
-  "daysSince": 1,
+  "daysSince": 2,
   "medianPause": 27,
   "versions": {
     "Public": "6997",
     "Staging": "3370",
-    "Experimental": "7521"
+    "Experimental": "7524"
   },
   "signals": [
     {
       "key": "staging",
       "label": "Staging",
       "value": "v3370",
-      "note": "Без изменений 7 дн.",
+      "note": "Без изменений 8 дн.",
       "status": "calm"
     },
     {
       "key": "pause",
       "label": "Пауза после патча",
-      "value": "1 дн.",
+      "value": "2 дн.",
       "note": "Медианный интервал — 27 дн.",
       "status": "calm"
     },
     {
       "key": "experimental",
       "label": "Experimental",
-      "value": "v7521",
-      "note": "5 смен за 7 дн. — справочный показатель",
+      "value": "v7524",
+      "note": "6 смен за 7 дн. — справочный показатель",
       "status": "calm"
     }
   ],
   "waitingSignals": 0,
-  "historySize": 98,
-  "updatedAt": "2026-11-26T02:21:49.663Z",
-  "sourcesCheckedAt": "2026-11-26T02:21:49.663Z"
+  "historySize": 99,
+  "updatedAt": "2026-11-26T11:10:14.004Z",
+  "sourcesCheckedAt": "2026-11-26T11:10:14.004Z"
 }
