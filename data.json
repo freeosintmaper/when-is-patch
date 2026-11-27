@@ -6,7 +6,7 @@
     "version": "7.42a",
     "timestamp": "2026-11-24T08:00:00.000Z"
   },
-  "daysSince": 2,
+  "daysSince": 3,
   "medianPause": 27,
   "versions": {
     "Public": "6997",
@@ -18,13 +18,13 @@
       "key": "staging",
       "label": "Staging",
       "value": "v3370",
-      "note": "Без изменений 8 дн.",
+      "note": "Без изменений 9 дн.",
       "status": "calm"
     },
     {
       "key": "pause",
       "label": "Пауза после патча",
-      "value": "2 дн.",
+      "value": "3 дн.",
       "note": "Медианный интервал — 27 дн.",
       "status": "calm"
     },
@@ -38,6 +38,6 @@
   ],
   "waitingSignals": 0,
   "historySize": 99,
-  "updatedAt": "2026-11-27T02:48:58.602Z",
-  "sourcesCheckedAt": "2026-11-27T02:48:58.602Z"
+  "updatedAt": "2026-11-27T11:31:08.837Z",
+  "sourcesCheckedAt": "2026-11-27T11:31:08.837Z"
 }
